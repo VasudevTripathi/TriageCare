@@ -1,14 +1,14 @@
-// TriageCare State Manager & Shared Logic (Pure In-Memory URL State Propagation)
+// TriageCare State Manager & Shared Logic (Pure In-Memory URL State Propagation with LocalStorage Fallback)
 (function() {
   // 1. Initial Default State Database
   const DEFAULT_PATIENTS = [
-    { id: 'P001', name: 'Rahul Sharma', age: 34, severity: 10, status: 'Critical' },
-    { id: 'P003', name: 'Sneha Patel', age: 28, severity: 9, status: 'Critical' },
-    { id: 'P005', name: 'Amit Verma', age: 45, severity: 7, status: 'High' },
-    { id: 'P002', name: 'Priya Singh', age: 22, severity: 5, status: 'Medium' },
-    { id: 'P004', name: 'Vikram Joshi', age: 30, severity: 4, status: 'Low' },
-    { id: 'P006', name: 'Rohan Das', age: 38, severity: 3, status: 'Low' },
-    { id: 'P007', name: 'Neha Gupta', age: 25, severity: 2, status: 'Low' }
+    { id: 'P001', name: 'Rahul Sharma', age: 34, severity: 10, status: 'Critical', arrivalOrder: 1 },
+    { id: 'P003', name: 'Sneha Patel', age: 28, severity: 9, status: 'Critical', arrivalOrder: 3 },
+    { id: 'P005', name: 'Amit Verma', age: 45, severity: 7, status: 'High', arrivalOrder: 5 },
+    { id: 'P002', name: 'Priya Singh', age: 22, severity: 5, status: 'Medium', arrivalOrder: 2 },
+    { id: 'P004', name: 'Vikram Joshi', age: 30, severity: 4, status: 'Low', arrivalOrder: 4 },
+    { id: 'P006', name: 'Rohan Das', age: 38, severity: 3, status: 'Low', arrivalOrder: 6 },
+    { id: 'P007', name: 'Neha Gupta', age: 25, severity: 2, status: 'Low', arrivalOrder: 7 }
   ];
 
   // 2. In-Memory State Variables
@@ -28,14 +28,13 @@
   // 3. Base64 State Serialization & Deserialization
   function serializeState() {
     const data = {
-      p: currentPatients.map(p => [p.id, p.name, p.age, p.severity]),
+      p: currentPatients.map(p => [p.id, p.name, p.age, p.severity, p.arrivalOrder]),
       tot: totalPatientsCount,
       tr: treatedPatientsCount,
       th: currentTheme
     };
     try {
       const jsonStr = JSON.stringify(data);
-      // Safe Unicode Base64 encoding
       const base64 = btoa(unescape(encodeURIComponent(jsonStr)));
       return encodeURIComponent(base64);
     } catch (e) {
@@ -56,7 +55,8 @@
           name: arr[1],
           age: parseInt(arr[2], 10),
           severity: parseInt(arr[3], 10),
-          status: getStatusString(parseInt(arr[3], 10))
+          status: getStatusString(parseInt(arr[3], 10)),
+          arrivalOrder: parseInt(arr[4] !== undefined ? arr[4] : arr[0].substring(1), 10)
         })),
         total: parseInt(data.tot, 10),
         treated: parseInt(data.tr, 10),
@@ -68,10 +68,33 @@
     }
   }
 
-  // Initialize state from URL if present, otherwise load defaults
+  // Save state helper to write to localStorage as fallback
+  function saveToLocalStorage() {
+    const s = serializeState();
+    if (s) {
+      try {
+        localStorage.setItem('tc_state', s);
+      } catch (e) {
+        // Ignore restricted storage errors
+      }
+    }
+  }
+
+  // Initialize state from URL or LocalStorage fallback
   const urlParams = new URLSearchParams(window.location.search);
   const stateStr = urlParams.get('s');
-  const parsedState = deserializeState(stateStr);
+  let parsedState = deserializeState(stateStr);
+
+  if (!parsedState) {
+    try {
+      const localStr = localStorage.getItem('tc_state');
+      if (localStr) {
+        parsedState = deserializeState(localStr);
+      }
+    } catch (e) {
+      // Ignore errors
+    }
+  }
 
   if (parsedState) {
     currentPatients = parsedState.patients;
@@ -79,11 +102,11 @@
     treatedPatientsCount = parsedState.treated;
     currentTheme = parsedState.theme;
   } else {
-    // Clone DEFAULT_PATIENTS to prevent mutation of the template
     currentPatients = DEFAULT_PATIENTS.map(p => ({ ...p }));
     totalPatientsCount = 12;
     treatedPatientsCount = 5;
     currentTheme = 'light';
+    saveToLocalStorage();
   }
 
   // 4. State Controller API
@@ -107,7 +130,6 @@
     },
 
     addPatient: function(name, age, severity) {
-      // Validate inputs
       const parsedAge = parseInt(age, 10);
       const parsedSeverity = parseInt(severity, 10);
       
@@ -123,21 +145,21 @@
         name: name,
         age: parsedAge,
         severity: parsedSeverity,
-        status: getStatusString(parsedSeverity)
+        status: getStatusString(parsedSeverity),
+        arrivalOrder: totalPatientsCount
       };
 
       currentPatients.push(newPatient);
 
-      // Sort by severity descending. If equal, sort by ID ascending (first added first)
+      // Sort by highest severity first. If equal, sort by arrivalOrder ascending.
       currentPatients.sort((a, b) => {
         if (b.severity !== a.severity) {
           return b.severity - a.severity;
         }
-        const idA = parseInt(a.id.substring(1), 10);
-        const idB = parseInt(b.id.substring(1), 10);
-        return idA - idB;
+        return a.arrivalOrder - b.arrivalOrder;
       });
 
+      saveToLocalStorage();
       return newPatient;
     },
 
@@ -145,6 +167,7 @@
       if (currentPatients.length === 0) return null;
       const treatedPatient = currentPatients.shift();
       treatedPatientsCount++;
+      saveToLocalStorage();
       this.syncUI();
       return treatedPatient;
     },
@@ -485,6 +508,7 @@
             themeIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m11.314 11.314l.707.707M12 8a4 4 0 100 8 4 4 0 000-8z" />`;
           }
         }
+        saveToLocalStorage();
       });
     }
 
