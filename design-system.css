@@ -127,6 +127,17 @@
 
 [data-theme="dark"] {
   /* Grayscale Palette overrides for dark background */
+  --tc-color-slate-50: #161F30;
+  --tc-color-slate-100: #1E293B;
+  --tc-color-slate-200: #334155;
+  --tc-color-slate-300: #475569;
+  --tc-color-slate-400: #64748B;
+  --tc-color-slate-500: #94A3B8;
+  --tc-color-slate-600: #CBD5E1;
+  --tc-color-slate-700: #E2E8F0;
+  --tc-color-slate-800: #F1F5F9;
+  --tc-color-slate-900: #F8FAFC;
+
   --tc-color-bg: #090D16;            /* Premium deep slate black */
   --tc-color-surface: #121824;       /* Card/Panel surface */
   --tc-color-surface-hover: #1A2338;
