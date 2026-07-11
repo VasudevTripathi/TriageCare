@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TriageCare - Design System Sandbox</title>
+  <link rel="stylesheet" href="design-system.css">
+  <style>
+    /* Sandbox-specific container overrides to present the components nicely */
+    .sandbox-layout {
+      display: flex;
+      min-height: 100vh;
+      width: 100%;
+    }
+    
+    .sandbox-content {
+      flex: 1;
+      padding: var(--tc-space-8) var(--tc-space-12);
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: var(--tc-space-10);
+    }
+
+    .sandbox-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--tc-color-border);
+      padding-bottom: var(--tc-space-6);
+    }
+
+    .sandbox-section {
+      display: flex;
+      flex-direction: column;
+      gap: var(--tc-space-4);
+    }
+
+    .sandbox-section-title {
+      font-size: var(--tc-font-xl);
+      border-left: 4px solid var(--tc-color-primary);
+      padding-left: var(--tc-space-3);
+      margin-bottom: var(--tc-space-2);
+    }
+
+    .sandbox-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--tc-space-4);
+      align-items: flex-end;
+    }
+
+    .sandbox-grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--tc-space-6);
+    }
+
+    .sandbox-grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--tc-space-6);
+    }
+
+    @media (max-width: 768px) {
+      .sandbox-grid-2, .sandbox-grid-3 {
+        grid-template-columns: 1fr;
+      }
+      .sandbox-content {
+        padding: var(--tc-space-6) var(--tc-space-4);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="sandbox-layout">
+    <!-- Inline sidebar demonstration -->
+    <aside class="tc-sidebar-container" style="height: auto; min-height: 100vh;">
+      <div class="tc-sidebar-header">
+        <div class="tc-logo">T</div>
+        <span class="tc-brand-name">TriageCare</span>
+      </div>
+      
+      <nav class="tc-sidebar-nav">
+        <span class="tc-sidebar-nav-label">Main Menu</span>
+        
+        <a href="#" class="tc-sidebar-item tc-sidebar-item-active" onclick="event.preventDefault();">
+          <div class="tc-sidebar-item-content">
+            <svg class="tc-sidebar-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" width="18" height="18"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+            <span>Dashboard</span>
+          </div>
+        </a>
+        
+        <a href="#" class="tc-sidebar-item" onclick="event.preventDefault();">
+          <div class="tc-sidebar-item-content">
+            <svg class="tc-sidebar-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" width="18" height="18"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+            <span>Patients</span>
+          </div>
+        </a>
+        
+        <a href="#" class="tc-sidebar-item" onclick="event.preventDefault();">
+          <div class="tc-sidebar-item-content">
+            <svg class="tc-sidebar-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" width="18" height="18"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            <span>Appointments</span>
+          </div>
+          <span class="tc-badge tc-badge-primary tc-text-xs" style="padding: 2px 6px;">12</span>
+        </a>
+
+        <a href="#" class="tc-sidebar-item" onclick="event.preventDefault();">
+          <div class="tc-sidebar-item-content">
+            <svg class="tc-sidebar-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" width="18" height="18"><path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+            <span>Wards</span>
+          </div>
+        </a>
+
+        <span class="tc-sidebar-nav-label">System</span>
+        <a href="#" class="tc-sidebar-item" onclick="event.preventDefault();">
+          <div class="tc-sidebar-item-content">
+            <svg class="tc-sidebar-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" width="18" height="18"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+            <span>Analytics</span>
+          </div>
+        </a>
+
+        <a href="#" class="tc-sidebar-item" onclick="event.preventDefault();">
+          <div class="tc-sidebar-item-content">
+            <svg class="tc-sidebar-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" width="18" height="18"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            <span>Settings</span>
+          </div>
+        </a>
+      </nav>
+      
+      <div class="tc-sidebar-footer">
+        <div class="tc-table-avatar">Dr</div>
+        <div class="tc-user-profile">
+          <span class="tc-user-name">Dr. Sarah Cole</span>
+          <span class="tc-user-role">Triage Supervisor</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Sandbox Showcase -->
+    <main class="sandbox-content">
+      
+      <!-- Sandbox Header -->
+      <header class="sandbox-header">
+        <div>
+          <h1 class="tc-text-main">TriageCare Design System</h1>
+          <p class="tc-text-muted" style="margin-bottom: 0;">Interactive Component Sandbox & Spec Preview</p>
+        </div>
+        <div>
+          <button id="themeToggleBtn" class="tc-btn tc-btn-secondary">
+            <svg id="themeIcon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+            <span id="themeToggleText">Switch to Dark Mode</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Section: Colors -->
+      <section class="sandbox-section">
+        <h3 class="sandbox-section-title">Color Palette & Tokens</h3>
+        <div class="sandbox-row">
+          <div style="text-align: center;">
+            <div style="width: 80px; height: 80px; background-color: var(--tc-color-primary); border-radius: var(--tc-radius-md); border: 1px solid var(--tc-color-border);"></div>
+            <span class="tc-text-xs tc-text-semibold">Primary</span>
+          </div>
+          <div style="text-align: center;">
+            <div style="width: 80px; height: 80px; background-color: var(--tc-color-primary-soft); border-radius: var(--tc-radius-md); border: 1px solid var(--tc-color-primary-border);"></div>
+            <span class="tc-text-xs tc-text-semibold">Primary Soft</span>
+          </div>
+          <div style="text-align: center;">
+            <div style="width: 80px; height: 80px; background-color: var(--tc-color-bg); border-radius: var(--tc-radius-md); border: 1px solid var(--tc-color-border);"></div>
+            <span class="tc-text-xs tc-text-semibold">Soft White Bg</span>
+          </div>
+          <div style="text-align: center;">
+            <div style="width: 80px; height: 80px; background-color: var(--tc-color-surface); border-radius: var(--tc-radius-md); border: 1px solid var(--tc-color-border);"></div>
+            <span class="tc-text-xs tc-text-semibold">Surface</span>
+          </div>
+          <div style="text-align: center;">
+            <div style="width: 80px; height: 80px; background-color: var(--tc-color-text-main); border-radius: var(--tc-radius-md); border: 1px solid var(--tc-color-border);"></div>
+            <span class="tc-text-xs tc-text-semibold">Text Main</span>
+          </div>
+          <div style="text-align: center;">
+            <div style="width: 80px; height: 80px; background-color: var(--tc-color-success); border-radius: var(--tc-radius-md); border: 1px solid var(--tc-color-success-border);"></div>
+            <span class="tc-text-xs tc-text-semibold">Success</span>
+          </div>
+          <div style="text-align: center;">
+            <div style="width: 80px; height: 80px; background-color: var(--tc-color-warning); border-radius: var(--tc-radius-md); border: 1px solid var(--tc-color-warning-border);"></div>
+            <span class="tc-text-xs tc-text-semibold">Warning</span>
+          </div>
+          <div style="text-align: center;">
+            <div style="width: 80px; height: 80px; background-color: var(--tc-color-danger); border-radius: var(--tc-radius-md); border: 1px solid var(--tc-color-danger-border);"></div>
+            <span class="tc-text-xs tc-text-semibold">Danger</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section: Buttons -->
+      <section class="sandbox-section">
+        <h3 class="sandbox-section-title">Button Components & Micro-animations</h3>
+        <div class="sandbox-row">
+          <button class="tc-btn tc-btn-primary">Primary Action</button>
+          <button class="tc-btn tc-btn-secondary">Secondary Action</button>
+          <button class="tc-btn tc-btn-outline">Outline Action</button>
+          <button class="tc-btn tc-btn-ghost">Ghost Link</button>
+          <button class="tc-btn tc-btn-primary" disabled>Disabled State</button>
+        </div>
+        <div class="sandbox-row" style="margin-top: 10px;">
+          <button class="tc-btn tc-btn-primary tc-btn-sm">Small Button</button>
+          <button class="tc-btn tc-btn-primary">Medium (Default)</button>
+          <button class="tc-btn tc-btn-primary tc-btn-lg">Large Action Button</button>
+          <button class="tc-btn tc-btn-secondary tc-btn-icon-only">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg>
+          </button>
+        </div>
+      </section>
+
+      <!-- Section: Input Fields -->
+      <section class="sandbox-section">
+        <h3 class="sandbox-section-title">Input Fields & Forms</h3>
+        <div class="sandbox-grid-3">
+          <!-- Text Input -->
+          <div class="tc-input-wrapper">
+            <label class="tc-label" for="ex-name">Patient Name</label>
+            <input type="text" id="ex-name" class="tc-input" placeholder="e.g. Alexander Fleming">
+          </div>
+
+          <!-- Leading Icon Input -->
+          <div class="tc-input-wrapper">
+            <label class="tc-label" for="ex-search">Search Admissions</label>
+            <div class="tc-input-field-container tc-input-has-leading-icon">
+              <div class="tc-input-icon tc-input-icon-leading">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+              </div>
+              <input type="text" id="ex-search" class="tc-input" placeholder="Search patients, vitals...">
+            </div>
+          </div>
+
+          <!-- Validation Error -->
+          <div class="tc-input-wrapper tc-input-error">
+            <label class="tc-label" for="ex-hr">Heart Rate (BPM)</label>
+            <input type="text" id="ex-hr" class="tc-input" value="185bpm" placeholder="e.g. 72">
+            <span class="tc-input-error-msg">Heart rate exceeds high threshold check</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section: Badges -->
+      <section class="sandbox-section">
+        <h3 class="sandbox-section-title">Badges & Bullet Indicators</h3>
+        <div class="sandbox-row">
+          <span class="tc-badge tc-badge-primary">Critical Care</span>
+          <span class="tc-badge tc-badge-success">Discharged</span>
+          <span class="tc-badge tc-badge-warning">Awaiting Lab</span>
+          <span class="tc-badge tc-badge-danger">Emergency</span>
+          <span class="tc-badge tc-badge-neutral">Outpatient</span>
+        </div>
+        <div class="sandbox-row" style="margin-top: 10px; gap: 24px;">
+          <span class="tc-badge-dot tc-badge-dot-primary">Selected Ward</span>
+          <span class="tc-badge-dot tc-badge-dot-success">System Active</span>
+          <span class="tc-badge-dot tc-badge-dot-warning">Triage Pending</span>
+          <span class="tc-badge-dot tc-badge-dot-danger">Telemetry Alarm</span>
+          <span class="tc-badge-dot tc-badge-dot-neutral">Archived Case</span>
+        </div>
+      </section>
+
+      <!-- Section: Cards -->
+      <section class="sandbox-section">
+        <h3 class="sandbox-section-title">Cards & Elevation States</h3>
+        <div class="sandbox-grid-3">
+          <!-- Card 1: Static Vital -->
+          <div class="tc-card">
+            <div class="tc-card-header">
+              <h5 class="tc-card-title">Heart Rate</h5>
+              <span class="tc-badge tc-badge-success">Normal</span>
+            </div>
+            <div class="tc-card-body">
+              <p class="tc-text-main tc-text-semibold" style="font-size: 2.25rem; margin-bottom: var(--tc-space-1); letter-spacing: -0.03em;">72 BPM</p>
+              <span class="tc-text-muted tc-text-xs">Dr. Cole approved • 3m ago</span>
+            </div>
+          </div>
+
+          <!-- Card 2: Interactive Lift -->
+          <div class="tc-card tc-card-hover">
+            <div class="tc-card-header">
+              <h5 class="tc-card-title">Triage Queue</h5>
+              <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+            </div>
+            <div class="tc-card-body">
+              <p>ER is operating at normal capacity. 4 patients awaiting primary check-in triage diagnostics.</p>
+            </div>
+            <div class="tc-card-footer">
+              <button class="tc-btn tc-btn-secondary tc-btn-sm">Open Queue</button>
+            </div>
+          </div>
+
+          <!-- Card 3: Glassmorphism Overlay -->
+          <div class="tc-card tc-card-glass">
+            <div class="tc-card-header">
+              <h5 class="tc-card-title">ICU Telemetry Stream</h5>
+              <span class="tc-badge-dot tc-badge-dot-primary tc-text-xs">Live Feed</span>
+            </div>
+            <div class="tc-card-body">
+              <p style="margin-bottom: var(--tc-space-4);">Real-time vitals monitoring and automated anomaly detector engine is loaded.</p>
+              <div class="tc-skeleton" style="width: 100%; margin-bottom: 6px;"></div>
+              <div class="tc-skeleton" style="width: 75%;"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section: Table -->
+      <section class="sandbox-section">
+        <h3 class="sandbox-section-title">Table Component & Data Lists</h3>
+        
+        <div class="tc-table-wrapper">
+          <div class="tc-table-container">
+            <table class="tc-table">
+              <thead>
+                <tr>
+                  <th>Patient</th>
+                  <th>Priority Level</th>
+                  <th>Chief Complaint</th>
+                  <th>Vitals Status</th>
+                  <th>Admitted Time</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <div class="tc-table-cell-profile">
+                      <div class="tc-table-avatar" style="background-color: #FEE2E2; color: #DC2626; border-color: #FCA5A5;">JD</div>
+                      <div>
+                        <div class="tc-text-main tc-text-semibold">John Doe</div>
+                        <div class="tc-text-muted tc-text-xs">ID: #T8201 • 42 yrs</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="tc-badge tc-badge-danger">Urgent (Level 1)</span>
+                  </td>
+                  <td>Severe chest pain & dyspnea</td>
+                  <td>
+                    <span class="tc-badge-dot tc-badge-dot-danger tc-text-xs">Unstable vitals</span>
+                  </td>
+                  <td>10:42 AM</td>
+                  <td>
+                    <button class="tc-btn tc-btn-ghost tc-btn-sm tc-btn-icon-only">
+                      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="tc-table-cell-profile">
+                      <div class="tc-table-avatar">AS</div>
+                      <div>
+                        <div class="tc-text-main tc-text-semibold">Alice Smith</div>
+                        <div class="tc-text-muted tc-text-xs">ID: #T8204 • 28 yrs</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="tc-badge tc-badge-warning">Emergent (Level 2)</span>
+                  </td>
+                  <td>Laceration on right arm</td>
+                  <td>
+                    <span class="tc-badge-dot tc-badge-dot-success tc-text-xs">Stable</span>
+                  </td>
+                  <td>11:05 AM</td>
+                  <td>
+                    <button class="tc-btn tc-btn-ghost tc-btn-sm tc-btn-icon-only">
+                      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="tc-table-cell-profile">
+                      <div class="tc-table-avatar" style="background-color: #ECFDF5; color: #047857; border-color: #A7F3D0;">WM</div>
+                      <div>
+                        <div class="tc-text-main tc-text-semibold">William Morgan</div>
+                        <div class="tc-text-muted tc-text-xs">ID: #T8207 • 61 yrs</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="tc-badge tc-badge-neutral">Non-Urgent (Level 4)</span>
+                  </td>
+                  <td>Routine bandage change</td>
+                  <td>
+                    <span class="tc-badge-dot tc-badge-dot-neutral tc-text-xs">Normal</span>
+                  </td>
+                  <td>11:15 AM</td>
+                  <td>
+                    <button class="tc-btn tc-btn-ghost tc-btn-sm tc-btn-icon-only">
+                      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Interactive JavaScript -->
+  <script>
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
+    const themeToggleText = document.getElementById('themeToggleText');
+    const themeIcon = document.getElementById('themeIcon');
+
+    themeToggleBtn.addEventListener('click', () => {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      if (isDark) {
+        // Toggle to light mode
+        document.documentElement.removeAttribute('data-theme');
+        themeToggleText.textContent = 'Switch to Dark Mode';
+        themeIcon.innerHTML = `<path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>`;
+      } else {
+        // Toggle to dark mode
+        document.documentElement.setAttribute('data-theme', 'dark');
+        themeToggleText.textContent = 'Switch to Light Mode';
+        themeIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m11.314 11.314l.707.707M12 8a4 4 0 100 8 4 4 0 000-8z" />`;
+      }
+    });
+  </script>
+
+</body>
+</html>

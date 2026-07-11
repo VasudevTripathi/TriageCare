@@ -1,0 +1,993 @@
+/* 
+ * TriageCare Design System
+ * Premium Modern SaaS Dashboard UI Library
+ * Inspired by Linear, Stripe, Clerk, and Vercel
+ * Reusable Across All Pages
+ */
+
+/* Import Inter Font from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* ==========================================================================
+   1. Design Tokens & Theme Variables
+   ========================================================================== */
+
+:root {
+  /* Font Family */
+  --tc-font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+  /* Typography Scale */
+  --tc-font-xs: 0.75rem;     /* 12px */
+  --tc-font-sm: 0.875rem;    /* 14px */
+  --tc-font-base: 1rem;      /* 16px */
+  --tc-font-lg: 1.125rem;    /* 18px */
+  --tc-font-xl: 1.25rem;     /* 20px */
+  --tc-font-2xl: 1.5rem;     /* 24px */
+  --tc-font-3xl: 1.875rem;   /* 30px */
+  --tc-font-4xl: 2.25rem;    /* 36px */
+
+  /* Font Weights */
+  --tc-weight-light: 300;
+  --tc-weight-regular: 400;
+  --tc-weight-medium: 500;
+  --tc-weight-semibold: 600;
+  --tc-weight-bold: 700;
+
+  /* Border Radiuses */
+  --tc-radius-sm: 6px;
+  --tc-radius-md: 10px;
+  --tc-radius-lg: 16px;
+  --tc-radius-xl: 20px;      /* Main container & Card radius */
+  --tc-radius-full: 9999px;  /* Pill shape */
+
+  /* Grayscale Palette (Slate) */
+  --tc-color-slate-50: #F8FAFC;
+  --tc-color-slate-100: #F1F5F9;
+  --tc-color-slate-200: #E2E8F0;
+  --tc-color-slate-300: #CBD5E1;
+  --tc-color-slate-400: #94A3B8;
+  --tc-color-slate-500: #64748B;
+  --tc-color-slate-600: #475569;
+  --tc-color-slate-700: #334155;
+  --tc-color-slate-800: #1E293B;
+  --tc-color-slate-900: #0F172A;
+  
+  /* Primary Brand Colors */
+  --tc-color-primary: #2563EB;
+  --tc-color-primary-hover: #1D4ED8;
+  --tc-color-primary-active: #1E40AF;
+  --tc-color-primary-soft: #EFF6FF;
+  --tc-color-primary-border: #DBEAFE;
+  
+  /* Semantic Colors (Light Theme Defaults) */
+  --tc-color-success: #059669;
+  --tc-color-success-bg: #ECFDF5;
+  --tc-color-success-border: #D1FAE5;
+
+  --tc-color-warning: #D97706;
+  --tc-color-warning-bg: #FFFBEB;
+  --tc-color-warning-border: #FEF3C7;
+
+  --tc-color-danger: #DC2626;
+  --tc-color-danger-bg: #FEF2F2;
+  --tc-color-danger-border: #FEE2E2;
+
+  --tc-color-info: #2563EB;
+  --tc-color-info-bg: #EFF6FF;
+  --tc-color-info-border: #DBEAFE;
+
+  /* Theme-Specific Colors (Light Theme) */
+  --tc-color-bg: #F8FAFC;            /* Soft off-white background */
+  --tc-color-surface: #FFFFFF;       /* Card/Panel surface */
+  --tc-color-surface-hover: #F8FAFC; /* Hovered surface */
+  --tc-color-sidebar: #FFFFFF;       /* Sidebar background */
+  
+  --tc-color-text-main: #0F172A;      /* Slate 900 */
+  --tc-color-text-secondary: #475569; /* Slate 600 */
+  --tc-color-text-muted: #64748B;     /* Slate 500 */
+  --tc-color-border: #E2E8F0;         /* Slate 200 */
+  --tc-color-border-hover: #CBD5E1;   /* Slate 300 */
+  --tc-color-divider: #F1F5F9;        /* Slate 100 */
+
+  /* Glassmorphism Variables */
+  --tc-glass-bg: rgba(255, 255, 255, 0.7);
+  --tc-glass-border: rgba(226, 232, 240, 0.6);
+  --tc-glass-shadow: 0 8px 32px 0 rgba(15, 23, 42, 0.04);
+  --tc-glass-blur: blur(12px);
+
+  /* Shadows (Stripe-like, Soft & Diffused) */
+  --tc-shadow-sm: 0 1px 2px 0 rgba(15, 23, 42, 0.03);
+  --tc-shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.03), 0 2px 4px -2px rgba(15, 23, 42, 0.03);
+  --tc-shadow-lg: 0 10px 15px -3px rgba(15, 23, 42, 0.04), 0 4px 6px -4px rgba(15, 23, 42, 0.03), 0 0 0 1px rgba(15, 23, 42, 0.01);
+  --tc-shadow-xl: 0 20px 25px -5px rgba(15, 23, 42, 0.05), 0 8px 10px -6px rgba(15, 23, 42, 0.04), 0 0 0 1px rgba(15, 23, 42, 0.015);
+  --tc-shadow-inner: inset 0 2px 4px 0 rgba(15, 23, 42, 0.04);
+
+  /* Spacing Grid (4px Base) */
+  --tc-space-1: 0.25rem;   /* 4px */
+  --tc-space-2: 0.5rem;    /* 8px */
+  --tc-space-3: 0.75rem;   /* 12px */
+  --tc-space-4: 1rem;      /* 16px */
+  --tc-space-5: 1.25rem;   /* 20px */
+  --tc-space-6: 1.5rem;    /* 24px */
+  --tc-space-8: 2rem;      /* 32px */
+  --tc-space-10: 2.5rem;   /* 40px */
+  --tc-space-12: 3rem;     /* 48px */
+  --tc-space-16: 4rem;     /* 64px */
+
+  /* Animation Durations & Curves */
+  --tc-transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --tc-transition-normal: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --tc-transition-slow: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  --tc-transition-bounce: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ==========================================================================
+   2. Dark Theme Support (Optional Hook)
+   ========================================================================== */
+
+[data-theme="dark"] {
+  /* Grayscale Palette overrides for dark background */
+  --tc-color-bg: #090D16;            /* Premium deep slate black */
+  --tc-color-surface: #121824;       /* Card/Panel surface */
+  --tc-color-surface-hover: #1A2338;
+  --tc-color-sidebar: #0E131F;
+  
+  --tc-color-text-main: #F8FAFC;      /* Slate 50 */
+  --tc-color-text-secondary: #94A3B8; /* Slate 400 */
+  --tc-color-text-muted: #64748B;     /* Slate 500 */
+  --tc-color-border: #1E293B;         /* Slate 800 */
+  --tc-color-border-hover: #334155;   /* Slate 700 */
+  --tc-color-divider: #151F32;
+
+  /* Glassmorphism Overrides */
+  --tc-glass-bg: rgba(18, 24, 36, 0.7);
+  --tc-glass-border: rgba(30, 41, 59, 0.6);
+  --tc-glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+
+  /* Shadows for Dark Mode (More pronounced borders, darker shadows) */
+  --tc-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --tc-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -2px rgba(0, 0, 0, 0.2);
+  --tc-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -4px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  --tc-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.08);
+
+  /* Semantic Overrides (Vibrant but visible on dark background) */
+  --tc-color-success: #34D399;
+  --tc-color-success-bg: rgba(52, 211, 153, 0.08);
+  --tc-color-success-border: rgba(52, 211, 153, 0.2);
+
+  --tc-color-warning: #F59E0B;
+  --tc-color-warning-bg: rgba(245, 158, 11, 0.08);
+  --tc-color-warning-border: rgba(245, 158, 11, 0.2);
+
+  --tc-color-danger: #F87171;
+  --tc-color-danger-bg: rgba(248, 113, 113, 0.08);
+  --tc-color-danger-border: rgba(248, 113, 113, 0.2);
+
+  --tc-color-info: #60A5FA;
+  --tc-color-info-bg: rgba(96, 165, 250, 0.08);
+  --tc-color-info-border: rgba(96, 165, 250, 0.2);
+}
+
+/* ==========================================================================
+   3. Document Resets & Base Styles
+   ========================================================================== */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--tc-font-family);
+  background-color: var(--tc-color-bg);
+  color: var(--tc-color-text-secondary);
+  font-weight: var(--tc-weight-regular);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Scrollbar Customization */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--tc-color-border);
+  border-radius: var(--tc-radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--tc-color-slate-400);
+}
+
+/* ==========================================================================
+   4. Typography
+   ========================================================================== */
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--tc-color-text-main);
+  font-weight: var(--tc-weight-semibold);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+
+h1 { font-size: var(--tc-font-4xl); font-weight: var(--tc-weight-bold); }
+h2 { font-size: var(--tc-font-3xl); font-weight: var(--tc-weight-bold); }
+h3 { font-size: var(--tc-font-2xl); }
+h4 { font-size: var(--tc-font-xl); }
+h5 { font-size: var(--tc-font-lg); }
+h6 { font-size: var(--tc-font-base); }
+
+p {
+  font-size: var(--tc-font-base);
+  margin-bottom: var(--tc-space-4);
+  color: var(--tc-color-text-secondary);
+}
+
+a {
+  color: var(--tc-color-primary);
+  text-decoration: none;
+  transition: var(--tc-transition-fast);
+}
+
+a:hover {
+  color: var(--tc-color-primary-hover);
+}
+
+/* Typography Utility Classes */
+.tc-text-main { color: var(--tc-color-text-main) !important; }
+.tc-text-secondary { color: var(--tc-color-text-secondary) !important; }
+.tc-text-muted { color: var(--tc-color-text-muted) !important; }
+.tc-text-primary { color: var(--tc-color-primary) !important; }
+.tc-text-xs { font-size: var(--tc-font-xs); }
+.tc-text-sm { font-size: var(--tc-font-sm); }
+.tc-text-lg { font-size: var(--tc-font-lg); }
+.tc-text-semibold { font-weight: var(--tc-weight-semibold); }
+.tc-text-medium { font-weight: var(--tc-weight-medium); }
+
+/* ==========================================================================
+   5. Button Components
+   ========================================================================== */
+
+.tc-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--tc-space-2);
+  font-family: var(--tc-font-family);
+  font-weight: var(--tc-weight-medium);
+  font-size: var(--tc-font-sm);
+  border-radius: var(--tc-radius-md);
+  padding: 10px 18px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  user-select: none;
+  text-decoration: none;
+  transition: var(--tc-transition-fast);
+}
+
+.tc-btn:focus-visible {
+  outline: 2px solid var(--tc-color-primary);
+  outline-offset: 2px;
+}
+
+.tc-btn:active {
+  transform: translateY(0px) scale(0.98);
+}
+
+.tc-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Primary Button (Vibrant Blue, Premium shadow/gradient) */
+.tc-btn-primary {
+  background: linear-gradient(180deg, var(--tc-color-primary) 0%, var(--tc-color-primary-hover) 100%);
+  color: #FFFFFF;
+  box-shadow: 0 1px 2px 0 rgba(37, 99, 235, 0.2), 0 4px 12px 0 rgba(37, 99, 235, 0.1);
+}
+
+.tc-btn-primary:hover:not(:disabled) {
+  background: linear-gradient(180deg, #3b82f6 0%, var(--tc-color-primary-hover) 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px 0 rgba(37, 99, 235, 0.15), 0 8px 16px 0 rgba(37, 99, 235, 0.15);
+}
+
+/* Secondary Button (Border, Clean white surface) */
+.tc-btn-secondary {
+  background-color: var(--tc-color-surface);
+  border-color: var(--tc-color-border);
+  color: var(--tc-color-text-main);
+  box-shadow: var(--tc-shadow-sm);
+}
+
+.tc-btn-secondary:hover:not(:disabled) {
+  background-color: var(--tc-color-surface-hover);
+  border-color: var(--tc-color-border-hover);
+  transform: translateY(-1px);
+  color: var(--tc-color-text-main);
+  box-shadow: var(--tc-shadow-md);
+}
+
+/* Ghost Button (Clerk-like minimal) */
+.tc-btn-ghost {
+  background-color: transparent;
+  color: var(--tc-color-text-secondary);
+}
+
+.tc-btn-ghost:hover:not(:disabled) {
+  background-color: var(--tc-color-slate-100);
+  color: var(--tc-color-text-main);
+}
+
+/* Outline Button */
+.tc-btn-outline {
+  background-color: transparent;
+  border-color: var(--tc-color-primary);
+  color: var(--tc-color-primary);
+}
+
+.tc-btn-outline:hover:not(:disabled) {
+  background-color: var(--tc-color-primary-soft);
+  transform: translateY(-1px);
+}
+
+/* Button Sizes */
+.tc-btn-sm {
+  padding: 6px 12px;
+  font-size: var(--tc-font-xs);
+  border-radius: var(--tc-radius-sm);
+}
+
+.tc-btn-lg {
+  padding: 12px 24px;
+  font-size: var(--tc-font-base);
+  border-radius: var(--tc-radius-lg);
+}
+
+/* Icon Wrap */
+.tc-btn-icon-only {
+  padding: 10px;
+  border-radius: var(--tc-radius-md);
+}
+.tc-btn-sm.tc-btn-icon-only {
+  padding: 6px;
+  border-radius: var(--tc-radius-sm);
+}
+
+/* ==========================================================================
+   6. Input Fields
+   ========================================================================== */
+
+.tc-input-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tc-space-1);
+  margin-bottom: var(--tc-space-4);
+  width: 100%;
+}
+
+.tc-label {
+  font-size: var(--tc-font-xs);
+  font-weight: var(--tc-weight-medium);
+  color: var(--tc-color-text-secondary);
+  user-select: none;
+}
+
+.tc-input-field-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.tc-input {
+  width: 100%;
+  font-family: var(--tc-font-family);
+  font-size: var(--tc-font-sm);
+  font-weight: var(--tc-weight-regular);
+  color: var(--tc-color-text-main);
+  background-color: var(--tc-color-surface);
+  border: 1px solid var(--tc-color-border);
+  border-radius: var(--tc-radius-md);
+  padding: 10px 14px;
+  box-shadow: var(--tc-shadow-sm);
+  outline: none;
+  transition: var(--tc-transition-fast);
+}
+
+.tc-input::placeholder {
+  color: var(--tc-color-text-muted);
+}
+
+.tc-input:hover:not(:disabled) {
+  border-color: var(--tc-color-border-hover);
+}
+
+.tc-input:focus:not(:disabled) {
+  border-color: var(--tc-color-primary);
+  box-shadow: 0 0 0 3px var(--tc-color-primary-soft), var(--tc-shadow-sm);
+}
+
+.tc-input:disabled {
+  opacity: 0.6;
+  background-color: var(--tc-color-slate-50);
+  cursor: not-allowed;
+}
+
+/* Input Validation Error State */
+.tc-input-error .tc-input {
+  border-color: var(--tc-color-danger);
+}
+
+.tc-input-error .tc-input:focus {
+  box-shadow: 0 0 0 3px var(--tc-color-danger-bg), var(--tc-shadow-sm);
+}
+
+.tc-input-error-msg {
+  font-size: var(--tc-font-xs);
+  color: var(--tc-color-danger);
+  margin-top: 2px;
+}
+
+/* Input with Icons */
+.tc-input-has-leading-icon .tc-input {
+  padding-left: 38px;
+}
+
+.tc-input-has-trailing-icon .tc-input {
+  padding-right: 38px;
+}
+
+.tc-input-icon {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--tc-color-text-muted);
+  pointer-events: none;
+  transition: var(--tc-transition-fast);
+}
+
+.tc-input-icon-leading {
+  left: 12px;
+}
+
+.tc-input-icon-trailing {
+  right: 12px;
+}
+
+.tc-input-field-container:focus-within .tc-input-icon {
+  color: var(--tc-color-primary);
+}
+
+/* ==========================================================================
+   7. Card Components
+   ========================================================================== */
+
+.tc-card {
+  background-color: var(--tc-color-surface);
+  border: 1px solid var(--tc-color-border);
+  border-radius: var(--tc-radius-xl); /* Rounded corners (20px) is set in variables as 20px */
+  padding: var(--tc-space-6);
+  box-shadow: var(--tc-shadow-lg);
+  transition: var(--tc-transition-normal);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Glassmorphism Variant */
+.tc-card-glass {
+  background: var(--tc-glass-bg);
+  backdrop-filter: var(--tc-glass-blur);
+  -webkit-backdrop-filter: var(--tc-glass-blur);
+  border: 1px solid var(--tc-glass-border);
+  box-shadow: var(--tc-glass-shadow);
+}
+
+/* Interactive Hover Card (Linear & Vercel like) */
+.tc-card-hover {
+  cursor: pointer;
+}
+
+.tc-card-hover:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--tc-shadow-xl);
+  border-color: var(--tc-color-border-hover);
+}
+
+/* Card Header & Content Layouts */
+.tc-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--tc-space-4);
+  gap: var(--tc-space-4);
+}
+
+.tc-card-title {
+  font-size: var(--tc-font-lg);
+  font-weight: var(--tc-weight-semibold);
+  color: var(--tc-color-text-main);
+}
+
+.tc-card-body {
+  font-size: var(--tc-font-sm);
+  color: var(--tc-color-text-secondary);
+}
+
+.tc-card-footer {
+  margin-top: var(--tc-space-5);
+  padding-top: var(--tc-space-4);
+  border-top: 1px solid var(--tc-color-divider);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--tc-space-3);
+}
+
+/* ==========================================================================
+   8. Tables
+   ========================================================================== */
+
+.tc-table-wrapper {
+  width: 100%;
+  border-radius: var(--tc-radius-xl);
+  border: 1px solid var(--tc-color-border);
+  background-color: var(--tc-color-surface);
+  box-shadow: var(--tc-shadow-lg);
+  overflow: hidden;
+}
+
+.tc-table-container {
+  overflow-x: auto;
+  width: 100%;
+}
+
+.tc-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: var(--tc-font-sm);
+}
+
+.tc-table th {
+  background-color: var(--tc-color-slate-50);
+  font-weight: var(--tc-weight-medium);
+  color: var(--tc-color-text-muted);
+  text-transform: uppercase;
+  font-size: var(--tc-font-xs);
+  letter-spacing: 0.05em;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--tc-color-border);
+  user-select: none;
+}
+
+.tc-table td {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--tc-color-divider);
+  color: var(--tc-color-text-secondary);
+  transition: var(--tc-transition-fast);
+}
+
+.tc-table tbody tr {
+  transition: var(--tc-transition-fast);
+}
+
+/* Table Hover Effect */
+.tc-table tbody tr:hover td {
+  background-color: var(--tc-color-slate-50);
+  color: var(--tc-color-text-main);
+}
+
+/* Last Row Border Removal */
+.tc-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Custom cell flex helper for avatars/icons with text */
+.tc-table-cell-profile {
+  display: flex;
+  align-items: center;
+  gap: var(--tc-space-3);
+}
+
+.tc-table-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--tc-radius-full);
+  background-color: var(--tc-color-primary-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--tc-weight-semibold);
+  font-size: var(--tc-font-xs);
+  color: var(--tc-color-primary);
+  border: 1px solid var(--tc-color-primary-border);
+}
+
+/* ==========================================================================
+   9. Sidebar Styles
+   ========================================================================== */
+
+.tc-sidebar-container {
+  width: 260px;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  background-color: var(--tc-color-sidebar);
+  border-right: 1px solid var(--tc-color-border);
+  padding: var(--tc-space-6) var(--tc-space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--tc-space-8);
+  flex-shrink: 0;
+  transition: var(--tc-transition-normal);
+  z-index: 100;
+}
+
+.tc-sidebar-header {
+  display: flex;
+  align-items: center;
+  gap: var(--tc-space-3);
+  padding-left: var(--tc-space-2);
+}
+
+.tc-logo {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--tc-radius-md);
+  background-color: var(--tc-color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+  font-weight: var(--tc-weight-bold);
+  box-shadow: 0 4px 10px 0 rgba(37, 99, 235, 0.3);
+}
+
+.tc-brand-name {
+  font-size: var(--tc-font-lg);
+  font-weight: var(--tc-weight-bold);
+  color: var(--tc-color-text-main);
+  letter-spacing: -0.02em;
+}
+
+/* Sidebar Nav Lists */
+.tc-sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tc-space-1);
+  flex: 1;
+}
+
+.tc-sidebar-nav-label {
+  font-size: var(--tc-font-xs);
+  font-weight: var(--tc-weight-semibold);
+  color: var(--tc-color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: var(--tc-space-2) var(--tc-space-3);
+  margin-top: var(--tc-space-4);
+  user-select: none;
+}
+
+.tc-sidebar-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  color: var(--tc-color-text-secondary);
+  border-radius: var(--tc-radius-md);
+  font-size: var(--tc-font-sm);
+  font-weight: var(--tc-weight-medium);
+  cursor: pointer;
+  transition: var(--tc-transition-fast);
+  text-decoration: none;
+  position: relative;
+}
+
+.tc-sidebar-item-content {
+  display: flex;
+  align-items: center;
+  gap: var(--tc-space-3);
+}
+
+.tc-sidebar-icon {
+  width: 18px;
+  height: 18px;
+  color: var(--tc-color-text-muted);
+  transition: var(--tc-transition-fast);
+}
+
+.tc-sidebar-item:hover {
+  background-color: var(--tc-color-slate-50);
+  color: var(--tc-color-text-main);
+}
+
+.tc-sidebar-item:hover .tc-sidebar-icon {
+  color: var(--tc-color-text-main);
+}
+
+/* Active Sidebar Item - Stripe/Linear Style side-dot/pill or soft highlight */
+.tc-sidebar-item-active {
+  background-color: var(--tc-color-primary-soft);
+  color: var(--tc-color-primary);
+}
+
+.tc-sidebar-item-active .tc-sidebar-icon {
+  color: var(--tc-color-primary);
+}
+
+/* Linear-style Active indicator strip */
+.tc-sidebar-item-active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 16px;
+  width: 3px;
+  background-color: var(--tc-color-primary);
+  border-radius: 0 4px 4px 0;
+}
+
+.tc-sidebar-footer {
+  display: flex;
+  align-items: center;
+  gap: var(--tc-space-3);
+  padding: var(--tc-space-3) var(--tc-space-2);
+  border-top: 1px solid var(--tc-color-divider);
+}
+
+.tc-user-profile {
+  display: flex;
+  flex-direction: column;
+}
+
+.tc-user-name {
+  font-size: var(--tc-font-sm);
+  font-weight: var(--tc-weight-semibold);
+  color: var(--tc-color-text-main);
+  line-height: 1.2;
+}
+
+.tc-user-role {
+  font-size: var(--tc-font-xs);
+  color: var(--tc-color-text-muted);
+}
+
+/* ==========================================================================
+   10. Badge Components
+   ========================================================================== */
+
+.tc-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 10px;
+  border-radius: var(--tc-radius-full);
+  font-size: var(--tc-font-xs);
+  font-weight: var(--tc-weight-medium);
+  line-height: 1;
+  white-space: nowrap;
+  border: 1px solid transparent;
+  user-select: none;
+}
+
+/* Primary Badge */
+.tc-badge-primary {
+  background-color: var(--tc-color-primary-soft);
+  border-color: var(--tc-color-primary-border);
+  color: var(--tc-color-primary);
+}
+
+/* Success Badge */
+.tc-badge-success {
+  background-color: var(--tc-color-success-bg);
+  border-color: var(--tc-color-success-border);
+  color: var(--tc-color-success);
+}
+
+/* Warning Badge */
+.tc-badge-warning {
+  background-color: var(--tc-color-warning-bg);
+  border-color: var(--tc-color-warning-border);
+  color: var(--tc-color-warning);
+}
+
+/* Danger Badge */
+.tc-badge-danger {
+  background-color: var(--tc-color-danger-bg);
+  border-color: var(--tc-color-danger-border);
+  color: var(--tc-color-danger);
+}
+
+/* Info/Neutral Badge */
+.tc-badge-neutral {
+  background-color: var(--tc-color-slate-100);
+  border-color: var(--tc-color-slate-200);
+  color: var(--tc-color-text-secondary);
+}
+
+/* Bullet Badges (Minimalist dot indicator) */
+.tc-badge-dot {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tc-space-2);
+  padding: 0;
+  background: transparent;
+  border: none;
+  font-size: var(--tc-font-sm);
+  color: var(--tc-color-text-secondary);
+  font-weight: var(--tc-weight-regular);
+}
+
+.tc-badge-dot::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: var(--tc-radius-full);
+}
+
+.tc-badge-dot-primary::before { background-color: var(--tc-color-primary); }
+.tc-badge-dot-success::before { background-color: var(--tc-color-success); }
+.tc-badge-dot-warning::before { background-color: var(--tc-color-warning); }
+.tc-badge-dot-danger::before { background-color: var(--tc-color-danger); }
+.tc-badge-dot-neutral::before { background-color: var(--tc-color-slate-400); }
+
+/* ==========================================================================
+   11. Layout & Grid Spacing System
+   ========================================================================== */
+
+/* Main Layout Structure */
+.tc-layout-wrapper {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.tc-main-content {
+  flex: 1;
+  padding: var(--tc-space-10) var(--tc-space-12);
+  max-width: 1440px; /* Constrained Desktop (1440px) */
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--tc-space-8);
+}
+
+/* Utility Flex/Grid Layouts */
+.tc-flex { display: flex; }
+.tc-flex-col { flex-direction: column; }
+.tc-align-center { align-items: center; }
+.tc-justify-between { justify-content: space-between; }
+
+.tc-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--tc-space-6);
+}
+
+.tc-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--tc-space-6);
+}
+
+.tc-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--tc-space-6);
+}
+
+@media (max-width: 1024px) {
+  .tc-grid-3, .tc-grid-4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .tc-grid-2, .tc-grid-3, .tc-grid-4 {
+    grid-template-columns: 1fr;
+  }
+  .tc-main-content {
+    padding: var(--tc-space-6) var(--tc-space-4);
+  }
+}
+
+/* Spacing Helpers */
+.tc-p-1 { padding: var(--tc-space-1); }
+.tc-p-2 { padding: var(--tc-space-2); }
+.tc-p-3 { padding: var(--tc-space-3); }
+.tc-p-4 { padding: var(--tc-space-4); }
+.tc-p-6 { padding: var(--tc-space-6); }
+.tc-p-8 { padding: var(--tc-space-8); }
+
+.tc-pt-4 { padding-top: var(--tc-space-4); }
+.tc-pb-4 { padding-bottom: var(--tc-space-4); }
+
+.tc-m-1 { margin: var(--tc-space-1); }
+.tc-m-2 { margin: var(--tc-space-2); }
+.tc-m-3 { margin: var(--tc-space-3); }
+.tc-m-4 { margin: var(--tc-space-4); }
+
+.tc-gap-2 { gap: var(--tc-space-2); }
+.tc-gap-3 { gap: var(--tc-space-3); }
+.tc-gap-4 { gap: var(--tc-space-4); }
+.tc-gap-6 { gap: var(--tc-space-6); }
+
+/* ==========================================================================
+   12. Micro-Animations & Custom Transitions
+   ========================================================================== */
+
+/* Hover Lift */
+.tc-hover-lift {
+  transition: var(--tc-transition-bounce);
+}
+.tc-hover-lift:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--tc-shadow-lg);
+}
+
+/* Scale Press (used in icons/small action triggers) */
+.tc-hover-scale {
+  transition: var(--tc-transition-fast);
+}
+.tc-hover-scale:hover {
+  transform: scale(1.05);
+}
+.tc-hover-scale:active {
+  transform: scale(0.95);
+}
+
+/* Shimmer animation (Linear skeleton effect) */
+@keyframes tc-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.tc-skeleton {
+  background: linear-gradient(90deg, 
+    var(--tc-color-slate-100) 25%, 
+    var(--tc-color-slate-200) 50%, 
+    var(--tc-color-slate-100) 75%
+  );
+  background-size: 200% 100%;
+  animation: tc-shimmer 1.5s infinite linear;
+  border-radius: var(--tc-radius-sm);
+  height: 1.25rem;
+}
+
+[data-theme="dark"] .tc-skeleton {
+  background: linear-gradient(90deg, 
+    var(--tc-color-border) 25%, 
+    var(--tc-color-divider) 50%, 
+    var(--tc-color-border) 75%
+  );
+  background-size: 200% 100%;
+}
