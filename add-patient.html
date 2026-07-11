@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TriageCare - Add New Patient</title>
+  <link rel="stylesheet" href="design-system.css">
+  <style>
+    /* Add Patient page structural layout */
+    .dashboard-grid-container {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      min-height: 100vh;
+      width: 100%;
+    }
+
+    .main-viewport {
+      background-color: var(--tc-color-bg);
+      padding: var(--tc-space-8) var(--tc-space-10);
+      max-width: 1440px;
+      width: 100%;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: var(--tc-space-8);
+      overflow-y: auto;
+    }
+
+    .header-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--tc-space-4);
+    }
+
+    .header-user-wrapper {
+      display: flex;
+      align-items: center;
+      gap: var(--tc-space-3);
+    }
+
+    .avatar-admin {
+      width: 42px;
+      height: 42px;
+      border-radius: var(--tc-radius-full);
+      background-color: var(--tc-color-primary);
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: var(--tc-weight-bold);
+      font-size: var(--tc-font-sm);
+      border: 2px solid var(--tc-color-primary-border);
+      box-shadow: var(--tc-shadow-md);
+      cursor: pointer;
+      transition: var(--tc-transition-fast);
+    }
+
+    .avatar-admin:hover {
+      transform: scale(1.05);
+      border-color: var(--tc-color-primary);
+    }
+
+    /* Centered Workspace Card Form */
+    .form-centered-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex: 1;
+      padding: var(--tc-space-10) 0;
+      width: 100%;
+    }
+
+    .form-card {
+      width: 100%;
+      max-width: 560px;
+      background-color: var(--tc-color-surface);
+      border: 1px solid var(--tc-color-border);
+      border-radius: var(--tc-radius-xl);
+      padding: var(--tc-space-8);
+      box-shadow: var(--tc-shadow-xl);
+      transition: var(--tc-transition-normal);
+    }
+
+    .form-actions-row {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: var(--tc-space-3);
+      margin-top: var(--tc-space-8);
+      padding-top: var(--tc-space-4);
+      border-top: 1px solid var(--tc-color-divider);
+    }
+
+    @media (max-width: 900px) {
+      .dashboard-grid-container {
+        grid-template-columns: 1fr;
+      }
+      .tc-sidebar-container {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="dashboard-grid-container">
+    <!-- Left Navigation Sidebar (Identical to index.html but Add Patient active) -->
+    <aside class="tc-sidebar-container">
+      <div class="tc-sidebar-header">
+        <div class="tc-logo">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75"/></svg>
+        </div>
+        <span class="tc-brand-name">TriageCare</span>
+      </div>
+      
+      <nav class="tc-sidebar-nav">
+        <span class="tc-sidebar-nav-label">Navigation</span>
+        
+        <a href="index.html" class="tc-sidebar-item">
+          <div class="tc-sidebar-item-content">
+            <svg class="tc-sidebar-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="18" height="18"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+            <span>Dashboard</span>
+          </div>
+        </a>
+        
+        <a href="#" class="tc-sidebar-item tc-sidebar-item-active" onclick="event.preventDefault();">
+          <div class="tc-sidebar-item-content">
+            <svg class="tc-sidebar-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="18" height="18"><path stroke-linecap="round" stroke-linejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
+            <span>Add Patient</span>
+          </div>
+        </a>
+        
+        <a href="index.html" class="tc-sidebar-item">
+          <div class="tc-sidebar-item-content">
+            <svg class="tc-sidebar-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="18" height="18"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
+            <span>Waiting Queue</span>
+          </div>
+          <span class="tc-badge tc-badge-danger tc-text-xs" style="padding: 2px 6px;">7</span>
+        </a>
+
+        <a href="index.html" class="tc-sidebar-item">
+          <div class="tc-sidebar-item-content">
+            <svg class="tc-sidebar-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="18" height="18"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+            <span>Treat Patient</span>
+          </div>
+        </a>
+
+        <a href="index.html" class="tc-sidebar-item">
+          <div class="tc-sidebar-item-content">
+            <svg class="tc-sidebar-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="18" height="18"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+            <span>Exit</span>
+          </div>
+        </a>
+      </nav>
+      
+      <div class="tc-sidebar-footer">
+        <div class="tc-table-avatar" style="background-color: var(--tc-color-primary-soft); color: var(--tc-color-primary); border-color: var(--tc-color-primary-border)">SA</div>
+        <div class="tc-user-profile">
+          <span class="tc-user-name">Student Admin</span>
+          <span class="tc-user-role">Administrator</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Workspace Viewport -->
+    <main class="main-viewport">
+      
+      <!-- Top Header Row -->
+      <section class="header-section">
+        <div>
+          <h1 class="tc-text-main">Emergency Patient Triage System</h1>
+          <p class="tc-text-muted" style="margin-bottom: 0;">Manage emergency patients using priority-based triage.</p>
+        </div>
+        <div class="header-user-wrapper">
+          <button id="themeToggleBtn" class="tc-btn tc-btn-secondary tc-btn-icon-only" title="Toggle Theme" style="padding: 10px;">
+            <svg id="themeIcon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+          </button>
+          <div class="avatar-admin" title="Student Admin Account">SA</div>
+        </div>
+      </section>
+
+      <!-- Centered Card Form Workspace -->
+      <section class="form-centered-container">
+        <div class="form-card">
+          <h2 class="tc-text-main" style="font-size: var(--tc-font-2xl); margin-bottom: var(--tc-space-8); font-weight: var(--tc-weight-bold); letter-spacing: -0.02em;">Add New Patient</h2>
+          
+          <form id="addPatientForm" onsubmit="event.preventDefault(); alert('Patient added successfully!');">
+            
+            <!-- Patient ID -->
+            <div class="tc-input-wrapper">
+              <label class="tc-label" for="patientId">Patient ID</label>
+              <input type="text" id="patientId" class="tc-input" value="P006" readonly style="background-color: var(--tc-color-slate-50); cursor: not-allowed;" title="Auto-generated Patient ID Token">
+            </div>
+
+            <!-- Patient Name -->
+            <div class="tc-input-wrapper">
+              <label class="tc-label" for="patientName">Patient Name</label>
+              <input type="text" id="patientName" class="tc-input" placeholder="e.g. Emily Watson" required>
+            </div>
+
+            <!-- Age -->
+            <div class="tc-input-wrapper">
+              <label class="tc-label" for="patientAge">Age</label>
+              <input type="number" id="patientAge" class="tc-input" placeholder="e.g. 29" min="1" max="120" required>
+            </div>
+
+            <!-- Severity level -->
+            <div class="tc-input-wrapper">
+              <label class="tc-label" for="patientSeverity">Severity Level</label>
+              <select id="patientSeverity" class="tc-input" required>
+                <option value="" disabled selected>Select level (1 - 10)</option>
+                <option value="1">1 - Extremely Mild</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4 - Low Urgency</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7 - High Urgency</option>
+                <option value="8">8</option>
+                <option value="9">9 - Critical Care</option>
+                <option value="10">10 - Emergency Resuscitation</option>
+              </select>
+            </div>
+
+            <!-- Form Actions Row -->
+            <div class="form-actions-row">
+              <button type="button" class="tc-btn tc-btn-secondary" onclick="document.getElementById('addPatientForm').reset();">Clear</button>
+              <button type="submit" class="tc-btn tc-btn-primary">Add Patient</button>
+            </div>
+
+          </form>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Interactive Theme Switcher script -->
+  <script>
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
+    const themeIcon = document.getElementById('themeIcon');
+
+    themeToggleBtn.addEventListener('click', () => {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      if (isDark) {
+        document.documentElement.removeAttribute('data-theme');
+        themeIcon.innerHTML = `<path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>`;
+      } else {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        themeIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m11.314 11.314l.707.707M12 8a4 4 0 100 8 4 4 0 000-8z" />`;
+      }
+    });
+  </script>
+
+</body>
+</html>
