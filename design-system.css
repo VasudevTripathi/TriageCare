@@ -115,10 +115,10 @@
   --tc-space-16: 4rem;     /* 64px */
 
   /* Animation Durations & Curves */
-  --tc-transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-  --tc-transition-normal: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  --tc-transition-slow: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  --tc-transition-bounce: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  --tc-transition-fast: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --tc-transition-normal: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --tc-transition-slow: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --tc-transition-bounce: all 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 /* ==========================================================================
@@ -518,6 +518,12 @@ select.tc-input {
   transition: var(--tc-transition-normal);
   position: relative;
   overflow: hidden;
+}
+
+.tc-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--tc-shadow-xl);
+  border-color: var(--tc-color-primary-border);
 }
 
 /* Glassmorphism Variant */
