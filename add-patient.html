@@ -90,7 +90,7 @@
         <div class="form-card">
           <h2 class="tc-text-main" style="font-size: var(--tc-font-2xl); margin-bottom: var(--tc-space-8); font-weight: var(--tc-weight-bold); letter-spacing: -0.02em;">Add New Patient</h2>
           
-          <form id="addPatientForm" onsubmit="event.preventDefault(); alert('Patient added successfully!');">
+          <form id="addPatientForm">
             
             <!-- Patient ID -->
             <div class="tc-input-wrapper">
@@ -130,7 +130,7 @@
 
             <!-- Form Actions Row -->
             <div class="form-actions-row">
-              <button type="button" class="tc-btn tc-btn-secondary" onclick="document.getElementById('addPatientForm').reset();">Clear</button>
+              <button type="reset" class="tc-btn tc-btn-secondary">Clear</button>
               <button type="submit" class="tc-btn tc-btn-primary">Add Patient</button>
             </div>
 

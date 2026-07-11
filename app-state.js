@@ -1,4 +1,4 @@
-// TriageCare State Manager & Shared Logic
+// TriageCare State Manager & Shared Logic (Pure In-Memory URL State Propagation)
 (function() {
   // 1. Initial Default State Database
   const DEFAULT_PATIENTS = [
@@ -11,86 +11,144 @@
     { id: 'P007', name: 'Neha Gupta', age: 25, severity: 2, status: 'Low' }
   ];
 
-  // 2. Initialize localStorage keys if not present
-  if (!localStorage.getItem('tc_patients')) {
-    localStorage.setItem('tc_patients', JSON.stringify(DEFAULT_PATIENTS));
-  }
-  if (!localStorage.getItem('tc_total_patients')) {
-    localStorage.setItem('tc_total_patients', '12');
-  }
-  if (!localStorage.getItem('tc_treated_patients')) {
-    localStorage.setItem('tc_treated_patients', '5');
+  // 2. In-Memory State Variables
+  let currentPatients = [];
+  let totalPatientsCount = 12;
+  let treatedPatientsCount = 5;
+  let currentTheme = 'light';
+
+  // Helper: Map severity score to status string
+  function getStatusString(severity) {
+    if (severity >= 9) return 'Critical';
+    if (severity >= 7) return 'High';
+    if (severity >= 5) return 'Medium';
+    return 'Low';
   }
 
-  // 3. State accessors
+  // 3. Base64 State Serialization & Deserialization
+  function serializeState() {
+    const data = {
+      p: currentPatients.map(p => [p.id, p.name, p.age, p.severity]),
+      tot: totalPatientsCount,
+      tr: treatedPatientsCount,
+      th: currentTheme
+    };
+    try {
+      const jsonStr = JSON.stringify(data);
+      // Safe Unicode Base64 encoding
+      const base64 = btoa(unescape(encodeURIComponent(jsonStr)));
+      return encodeURIComponent(base64);
+    } catch (e) {
+      console.error("Serialization failed", e);
+      return '';
+    }
+  }
+
+  function deserializeState(str) {
+    if (!str) return null;
+    try {
+      const base64 = decodeURIComponent(str);
+      const jsonStr = decodeURIComponent(escape(atob(base64)));
+      const data = JSON.parse(jsonStr);
+      return {
+        patients: data.p.map(arr => ({
+          id: arr[0],
+          name: arr[1],
+          age: parseInt(arr[2], 10),
+          severity: parseInt(arr[3], 10),
+          status: getStatusString(parseInt(arr[3], 10))
+        })),
+        total: parseInt(data.tot, 10),
+        treated: parseInt(data.tr, 10),
+        theme: data.th || 'light'
+      };
+    } catch (e) {
+      console.error("Deserialization failed", e);
+      return null;
+    }
+  }
+
+  // Initialize state from URL if present, otherwise load defaults
+  const urlParams = new URLSearchParams(window.location.search);
+  const stateStr = urlParams.get('s');
+  const parsedState = deserializeState(stateStr);
+
+  if (parsedState) {
+    currentPatients = parsedState.patients;
+    totalPatientsCount = parsedState.total;
+    treatedPatientsCount = parsedState.treated;
+    currentTheme = parsedState.theme;
+  } else {
+    // Clone DEFAULT_PATIENTS to prevent mutation of the template
+    currentPatients = DEFAULT_PATIENTS.map(p => ({ ...p }));
+    totalPatientsCount = 12;
+    treatedPatientsCount = 5;
+    currentTheme = 'light';
+  }
+
+  // 4. State Controller API
   window.TriageState = {
     getPatients: function() {
-      return JSON.parse(localStorage.getItem('tc_patients')) || [];
+      return currentPatients;
     },
-    savePatients: function(patients) {
-      localStorage.setItem('tc_patients', JSON.stringify(patients));
-      // Trigger a visual update
-      this.syncUI();
-    },
+    
     getStats: function() {
-      const patients = this.getPatients();
-      const total = parseInt(localStorage.getItem('tc_total_patients'), 10) || 0;
-      const treated = parseInt(localStorage.getItem('tc_treated_patients'), 10) || 0;
       return {
-        total: total,
-        waiting: patients.length,
-        treated: treated
+        total: totalPatientsCount,
+        waiting: currentPatients.length,
+        treated: treatedPatientsCount
       };
     },
-    addPatient: function(name, age, severity) {
-      const patients = this.getPatients();
-      const totalCount = parseInt(localStorage.getItem('tc_total_patients'), 10) || 0;
-      
-      // Calculate next patient ID
-      const nextNum = totalCount + 1;
-      const nextId = 'P' + String(nextNum).padStart(3, '0');
-      
-      // Map severity score to status string
-      let status = 'Low';
-      if (severity >= 9) status = 'Critical';
-      else if (severity >= 7) status = 'High';
-      else if (severity >= 5) status = 'Medium';
 
-      // Insert new patient
+    navigateTo: function(url) {
+      const s = serializeState();
+      const separator = url.includes('?') ? '&' : '?';
+      window.location.href = url + separator + 's=' + s;
+    },
+
+    addPatient: function(name, age, severity) {
+      // Validate inputs
+      const parsedAge = parseInt(age, 10);
+      const parsedSeverity = parseInt(severity, 10);
+      
+      if (!name || isNaN(parsedAge) || parsedAge <= 0 || isNaN(parsedSeverity) || parsedSeverity < 1 || parsedSeverity > 10) {
+        return null;
+      }
+
+      totalPatientsCount++;
+      const nextId = 'P' + String(totalPatientsCount).padStart(3, '0');
+      
       const newPatient = {
         id: nextId,
         name: name,
-        age: parseInt(age, 10),
-        severity: parseInt(severity, 10),
-        status: status
+        age: parsedAge,
+        severity: parsedSeverity,
+        status: getStatusString(parsedSeverity)
       };
 
-      patients.push(newPatient);
+      currentPatients.push(newPatient);
 
-      // Re-order queue based on severity score (descending)
-      patients.sort((a, b) => b.severity - a.severity);
+      // Sort by severity descending. If equal, sort by ID ascending (first added first)
+      currentPatients.sort((a, b) => {
+        if (b.severity !== a.severity) {
+          return b.severity - a.severity;
+        }
+        const idA = parseInt(a.id.substring(1), 10);
+        const idB = parseInt(b.id.substring(1), 10);
+        return idA - idB;
+      });
 
-      // Update local storage
-      localStorage.setItem('tc_total_patients', String(nextNum));
-      this.savePatients(patients);
       return newPatient;
     },
-    treatNextPatient: function() {
-      const patients = this.getPatients();
-      if (patients.length === 0) return null;
 
-      // Remove the highest priority patient (first element after sorting)
-      const treatedPatient = patients.shift();
-      
-      // Increment treated count
-      const treatedCount = (parseInt(localStorage.getItem('tc_treated_patients'), 10) || 0) + 1;
-      localStorage.setItem('tc_treated_patients', String(treatedCount));
-      
-      this.savePatients(patients);
+    treatNextPatient: function() {
+      if (currentPatients.length === 0) return null;
+      const treatedPatient = currentPatients.shift();
+      treatedPatientsCount++;
+      this.syncUI();
       return treatedPatient;
     },
-    
-    // Status Badge generator
+
     getStatusBadgeClass: function(status) {
       switch (status) {
         case 'Critical': return 'tc-badge-danger';
@@ -100,7 +158,6 @@
       }
     },
 
-    // Avatar styling generator based on status
     getAvatarStyle: function(status) {
       switch (status) {
         case 'Critical':
@@ -110,24 +167,25 @@
         case 'Medium':
           return 'background-color: var(--tc-color-info-bg); color: var(--tc-color-info); border-color: var(--tc-color-info-border);';
         default:
-          return ''; // Use defaults
+          return '';
       }
     },
 
-    // 4. Synchronize HTML elements
+    // Synchronize DOM elements to current state
     syncUI: function() {
       const stats = this.getStats();
       const patients = this.getPatients();
 
-      // Update sidebar queue badge if present
+      // Update sidebar queue badge counter
       document.querySelectorAll('.tc-sidebar-nav a').forEach(a => {
-        if (a.innerText.includes('Waiting Queue')) {
+        const span = a.querySelector('span');
+        if (span && span.textContent.trim() === 'Waiting Queue') {
           const badge = a.querySelector('.tc-badge');
           if (badge) badge.textContent = String(stats.waiting);
         }
       });
 
-      // Update summary metric cards if they exist on the page
+      // Update total patients, waiting patients, treated patients summary cards
       document.querySelectorAll('.tc-card').forEach(card => {
         const titleEl = card.querySelector('.tc-card-title');
         if (!titleEl) return;
@@ -135,11 +193,11 @@
         const valueEl = card.querySelector('.tc-card-body p');
         if (!valueEl) return;
 
-        if (titleText.includes('Total Patients')) {
+        if (titleText === 'Total Patients') {
           valueEl.textContent = String(stats.total);
-        } else if (titleText.includes('Waiting Patients')) {
+        } else if (titleText === 'Waiting Patients') {
           valueEl.textContent = String(stats.waiting);
-        } else if (titleText.includes('Treated Patients')) {
+        } else if (titleText === 'Treated Patients') {
           valueEl.textContent = String(stats.treated);
         }
       });
@@ -175,11 +233,10 @@
         }
       }
 
-      // Render Large Waiting Queue Page Table (All patients)
+      // Render Waiting Queue Table (All patients)
       const queueTableBody = document.querySelector('.queue-table-card tbody');
       if (queueTableBody) {
         queueTableBody.innerHTML = '';
-        // Update total cases text counter badge
         const casesCountBadge = document.querySelector('.queue-table-card .tc-badge-primary');
         if (casesCountBadge) {
           casesCountBadge.textContent = `${stats.waiting} Active Cases`;
@@ -212,17 +269,18 @@
         }
       }
 
-      // Sync Next Patient display components on Dashboard
+      // Render Next Patient card on Dashboard
       const nextPatientCard = document.querySelector('.tc-card-glass');
       if (nextPatientCard) {
         const nextPatientProfile = nextPatientCard.querySelector('.next-patient-profile');
-        const nextPatientFooter = nextPatientCard.nextElementSibling || nextPatientCard.querySelector('.tc-card-footer');
+        const nextPatientFooter = nextPatientCard.querySelector('.tc-card-footer');
+        const levelBadge = nextPatientCard.querySelector('.tc-card-header .tc-badge-danger');
         
         if (patients.length === 0) {
-          // Empty state
+          if (levelBadge) levelBadge.style.display = 'none';
           if (nextPatientProfile) {
             nextPatientProfile.innerHTML = `
-              <div style="padding: var(--tc-space-4) 0; color: var(--tc-color-text-muted);">
+              <div style="padding: var(--tc-space-6) 0; color: var(--tc-color-text-muted);">
                 <p class="tc-text-semibold">Queue Empty</p>
                 <span class="tc-text-xs">No patients waiting.</span>
               </div>
@@ -235,10 +293,10 @@
         } else {
           const topPatient = patients[0];
           const initials = topPatient.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
-          
-          // Sync header severity badge
-          const levelBadge = nextPatientCard.querySelector('.tc-card-header .tc-badge-danger');
-          if (levelBadge) levelBadge.textContent = `Level ${topPatient.severity}`;
+          if (levelBadge) {
+            levelBadge.style.display = 'inline-flex';
+            levelBadge.textContent = `Level ${topPatient.severity}`;
+          }
 
           if (nextPatientProfile) {
             nextPatientProfile.innerHTML = `
@@ -266,20 +324,22 @@
         }
       }
 
-      // Sync Next Patient Card on Treat Patient page
+      // Render Treat Patient card page
       const treatCard = document.querySelector('.treat-card');
       if (treatCard) {
-        const hasExitModal = document.querySelector('.modal-backdrop');
-        // Check that this is indeed the treat-card page, not the exit card
-        if (!hasExitModal || treatCard.id !== 'exitModalCard') {
+        // Exclude the exitModalCard
+        if (treatCard.id !== 'exitModalCard') {
           if (patients.length === 0) {
             treatCard.innerHTML = `
               <h2 class="tc-text-main" style="font-size: var(--tc-font-2xl); margin-bottom: var(--tc-space-6); font-weight: var(--tc-weight-bold); letter-spacing: -0.02em;">Next Patient To Treat</h2>
               <div style="padding: var(--tc-space-10) 0; text-align: center; color: var(--tc-color-text-muted);">
-                <p class="tc-text-semibold" style="font-size: var(--tc-font-lg);">Queue Fully Clear</p>
+                <p class="tc-text-semibold" style="font-size: var(--tc-font-lg); margin-bottom: var(--tc-space-2);">No patients waiting.</p>
                 <span class="tc-text-xs">There are no patients awaiting treatment in the priority queue.</span>
               </div>
-              <a href="index.html" class="tc-btn tc-btn-secondary" style="width: 100%; justify-content: center; margin-top: var(--tc-space-4);">Go To Dashboard</a>
+              <button id="pageTreatPatientBtn" class="tc-btn tc-btn-primary" style="width: 100%; padding: 14px 20px; font-size: var(--tc-font-base); justify-content: center; margin-bottom: var(--tc-space-3);" disabled>
+                Treat Patient
+              </button>
+              <span class="tc-text-muted tc-text-xs">Highest priority patient will always be treated first.</span>
             `;
           } else {
             const topPatient = patients[0];
@@ -325,14 +385,11 @@
               <span class="tc-text-muted tc-text-xs">Highest priority patient will always be treated first.</span>
             `;
 
-            // Setup Treat button handler
+            // Bind treat button
             const btn = document.getElementById('pageTreatPatientBtn');
             if (btn) {
               btn.addEventListener('click', () => {
-                const treated = window.TriageState.treatNextPatient();
-                if (treated) {
-                  alert(`${treated.name} (ID: ${treated.id}) has been treated and removed from the active queue.`);
-                }
+                window.TriageState.treatNextPatient();
               });
             }
           }
@@ -340,82 +397,90 @@
       }
 
       // Sync Add Patient ID preview
-      const addPatientForm = document.getElementById('addPatientForm');
-      if (addPatientForm) {
-        const idInput = document.getElementById('patientId');
-        if (idInput) {
-          idInput.value = 'P' + String(stats.total + 1).padStart(3, '0');
-        }
+      const idInput = document.getElementById('patientId');
+      if (idInput) {
+        idInput.value = 'P' + String(totalPatientsCount + 1).padStart(3, '0');
       }
     }
   };
 
-  // 5. Setup Event Listeners & Initialize
+  // 5. Setup DOM Event Listeners & Initialize
   document.addEventListener('DOMContentLoaded', () => {
-    // A. Sync correct navigation links across sidebar of all pages
-    document.querySelectorAll('.tc-sidebar-nav a').forEach(a => {
-      const label = a.querySelector('span') ? a.querySelector('span').innerText.trim() : a.innerText.trim();
-      if (label === 'Dashboard') {
-        a.setAttribute('href', 'index.html');
-        a.removeAttribute('onclick');
-      } else if (label === 'Add Patient') {
-        a.setAttribute('href', 'add-patient.html');
-        a.removeAttribute('onclick');
-      } else if (label === 'Waiting Queue') {
-        a.setAttribute('href', 'waiting-queue.html');
-        a.removeAttribute('onclick');
-      } else if (label === 'Treat Patient') {
-        a.setAttribute('href', 'treat-patient.html');
-        a.removeAttribute('onclick');
-      } else if (label === 'Exit') {
-        a.setAttribute('href', 'exit.html');
-        a.removeAttribute('onclick');
-      }
-    });
-
-    // B. Fix Quick Actions button links on Dashboard
-    document.querySelectorAll('.quick-actions-stack button, .quick-actions-stack a').forEach(el => {
-      const span = el.querySelector('span');
-      if (!span) return;
-      const label = span.innerText.trim();
-      
-      // If it is a button, convert to anchor link or set onclick redirection
-      if (label === 'Add Patient') {
-        el.setAttribute('onclick', "window.location.href='add-patient.html';");
-      } else if (label === 'Queue') {
-        el.setAttribute('onclick', "window.location.href='waiting-queue.html';");
-      } else if (label === 'Treat') {
-        el.setAttribute('onclick', "window.location.href='treat-patient.html';");
-      } else if (label === 'Exit') {
-        el.setAttribute('onclick', "window.location.href='exit.html';");
-      }
-    });
-
-    // C. Theme toggler persistent sync
-    const savedTheme = localStorage.getItem('tc_theme');
-    if (savedTheme === 'dark') {
+    // Apply Theme
+    if (currentTheme === 'dark') {
       document.documentElement.setAttribute('data-theme', 'dark');
-      const themeIcon = document.getElementById('themeIcon');
-      if (themeIcon) {
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+    }
+
+    const themeIcon = document.getElementById('themeIcon');
+    if (themeIcon) {
+      if (currentTheme === 'dark') {
         themeIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m11.314 11.314l.707.707M12 8a4 4 0 100 8 4 4 0 000-8z" />`;
+      } else {
+        themeIcon.innerHTML = `<path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>`;
       }
     }
 
+    // A. Intercept vertical sidebar navigation links
+    document.querySelectorAll('.tc-sidebar-nav a').forEach(a => {
+      const span = a.querySelector('span');
+      if (!span) return;
+      const label = span.textContent.trim();
+      
+      let target = '';
+      if (label === 'Dashboard') target = 'index.html';
+      else if (label === 'Add Patient') target = 'add-patient.html';
+      else if (label === 'Waiting Queue') target = 'waiting-queue.html';
+      else if (label === 'Treat Patient') target = 'treat-patient.html';
+      else if (label === 'Exit') target = 'exit.html';
+
+      if (target) {
+        a.removeAttribute('href');
+        a.style.cursor = 'pointer';
+        a.addEventListener('click', (e) => {
+          e.preventDefault();
+          window.TriageState.navigateTo(target);
+        });
+      }
+    });
+
+    // B. Intercept Dashboard Quick Action items
+    document.querySelectorAll('.quick-actions-stack button, .quick-actions-stack a').forEach(el => {
+      const span = el.querySelector('span');
+      if (!span) return;
+      const label = span.textContent.trim();
+      
+      let target = '';
+      if (label === 'Add Patient') target = 'add-patient.html';
+      else if (label === 'Queue') target = 'waiting-queue.html';
+      else if (label === 'Treat') target = 'treat-patient.html';
+      else if (label === 'Exit') target = 'exit.html';
+
+      if (target) {
+        el.removeAttribute('onclick');
+        el.style.cursor = 'pointer';
+        el.addEventListener('click', (e) => {
+          e.preventDefault();
+          window.TriageState.navigateTo(target);
+        });
+      }
+    });
+
+    // C. Theme toggler
     const themeToggleBtn = document.getElementById('themeToggleBtn');
     if (themeToggleBtn) {
       themeToggleBtn.addEventListener('click', () => {
         const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-        const themeIcon = document.getElementById('themeIcon');
-        
         if (isDark) {
           document.documentElement.removeAttribute('data-theme');
-          localStorage.setItem('tc_theme', 'light');
+          currentTheme = 'light';
           if (themeIcon) {
             themeIcon.innerHTML = `<path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>`;
           }
         } else {
           document.documentElement.setAttribute('data-theme', 'dark');
-          localStorage.setItem('tc_theme', 'dark');
+          currentTheme = 'dark';
           if (themeIcon) {
             themeIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m11.314 11.314l.707.707M12 8a4 4 0 100 8 4 4 0 000-8z" />`;
           }
@@ -423,7 +488,7 @@
       });
     }
 
-    // D. Add Patient Form submit logic
+    // D. Add Patient Form submit logic with explicit frontend validation
     const addPatientForm = document.getElementById('addPatientForm');
     if (addPatientForm) {
       addPatientForm.addEventListener('submit', (e) => {
@@ -432,34 +497,71 @@
         const ageInput = document.getElementById('patientAge');
         const severitySelect = document.getElementById('patientSeverity');
 
-        if (nameInput && ageInput && severitySelect) {
-          const newP = window.TriageState.addPatient(
-            nameInput.value.trim(),
-            ageInput.value,
-            severitySelect.value
-          );
-          alert(`Patient ${newP.name} (ID: ${newP.id}) has been added to the queue under Severity level ${newP.severity}.`);
-          window.location.href = 'index.html'; // Redirect to dashboard
+        if (!nameInput || !ageInput || !severitySelect) return;
+
+        const name = nameInput.value.trim();
+        const ageVal = ageInput.value.trim();
+        const severityVal = severitySelect.value;
+
+        // Validation checks
+        if (!name || !ageVal || !severityVal) {
+          alert("All fields are required.");
+          return;
+        }
+
+        const age = parseInt(ageVal, 10);
+        const severity = parseInt(severityVal, 10);
+
+        if (isNaN(age) || age <= 0) {
+          alert("Age must be greater than 0.");
+          return;
+        }
+
+        if (isNaN(severity) || severity < 1 || severity > 10) {
+          alert("Severity must be between 1 and 10.");
+          return;
+        }
+
+        // Add the patient
+        const newP = window.TriageState.addPatient(name, age, severity);
+        if (newP) {
+          // Navigate back to Dashboard with state
+          window.TriageState.navigateTo('index.html');
         }
       });
     }
 
-    // E. Treat Now button on Dashboard right-sidebar
+    // E. Treat Now button on Dashboard right-sidebar card
     const nextPatientCard = document.querySelector('.tc-card-glass');
     if (nextPatientCard) {
-      const treatNowBtn = nextPatientCard.querySelector('.tc-card-footer .tc-btn');
+      const treatNowBtn = nextPatientCard.querySelector('.tc-card-footer button.tc-btn-primary');
       if (treatNowBtn) {
         treatNowBtn.addEventListener('click', (e) => {
           e.preventDefault();
-          const treated = window.TriageState.treatNextPatient();
-          if (treated) {
-            alert(`${treated.name} (ID: ${treated.id}) has been treated and removed from the active queue.`);
-          }
+          window.TriageState.treatNextPatient();
         });
       }
     }
 
-    // F. Final sync UI render
+    // F. Exit Modal confirmation actions
+    const confirmExitBtn = document.getElementById('confirmExitBtn');
+    if (confirmExitBtn) {
+      confirmExitBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.TriageState.navigateTo('index.html');
+      });
+    }
+    const cancelExitBtn = document.querySelector('.modal-actions .tc-btn-outline');
+    if (cancelExitBtn) {
+      cancelExitBtn.removeAttribute('href');
+      cancelExitBtn.style.cursor = 'pointer';
+      cancelExitBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.TriageState.navigateTo('index.html');
+      });
+    }
+
+    // Initial Sync
     window.TriageState.syncUI();
   });
 })();

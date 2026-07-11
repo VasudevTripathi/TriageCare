@@ -120,27 +120,6 @@
     </div>
   </div>
 
-  <!-- Interactive JavaScript logic -->
-  <script>
-    const confirmExitBtn = document.getElementById('confirmExitBtn');
-    const exitModalCard = document.getElementById('exitModalCard');
-
-    confirmExitBtn.addEventListener('click', () => {
-      // Transition the modal card content to a clean confirmation screen
-      exitModalCard.style.textAlign = 'center';
-      exitModalCard.innerHTML = `
-        <div style="display: flex; flex-direction: column; align-items: center; gap: var(--tc-space-4); padding: var(--tc-space-4) 0;">
-          <div style="width: 56px; height: 56px; border-radius: var(--tc-radius-full); background-color: var(--tc-color-success-bg); color: var(--tc-color-success); border: 2px solid var(--tc-color-success-border); display: flex; align-items: center; justify-content: center;">
-            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-          </div>
-          <div style="display: flex; flex-direction: column; gap: var(--tc-space-1);">
-            <h2 class="tc-text-main" style="font-size: var(--tc-font-xl); font-weight: var(--tc-weight-semibold); margin-bottom: 0;">Session Terminated</h2>
-            <p class="tc-text-muted" style="font-size: var(--tc-font-xs); margin-bottom: 0;">You have successfully exited TriageCare.</p>
-          </div>
-          <p class="tc-text-muted tc-text-xs" style="margin-top: var(--tc-space-2);">Feel free to close this browser tab.</p>
-        </div>
-      `;
-    });
   <script src="app-state.js"></script>
 </body>
 </html>
