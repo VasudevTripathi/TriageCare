@@ -220,6 +220,10 @@ int main() {
         std::cout << "Choose an action (1-4): ";
 
         if (!(std::cin >> choice)) {
+            if (std::cin.eof()) {
+                std::cout << "\n[INFO] Input stream closed (EOF). Exiting TriageCare Backend.\n";
+                break;
+            }
             std::cout << "[ERROR] Invalid choice input. Please choose a number.\n";
             clearInput();
             continue;
@@ -233,22 +237,42 @@ int main() {
             std::cout << "\n[ADD PATIENT] Enter Patient Name: ";
             clearInput();
             std::getline(std::cin, name);
+            if (std::cin.eof()) {
+                std::cout << "\n[INFO] Input stream closed (EOF). Exiting TriageCare Backend.\n";
+                break;
+            }
             if (name.empty()) {
                 std::cout << "[ERROR] Patient name is required.\n";
                 continue;
             }
 
             std::cout << "[ADD PATIENT] Enter Patient Age: ";
-            if (!(std::cin >> age) || age <= 0) {
+            if (!(std::cin >> age)) {
+                if (std::cin.eof()) {
+                    std::cout << "\n[INFO] Input stream closed (EOF). Exiting TriageCare Backend.\n";
+                    break;
+                }
                 std::cout << "[ERROR] Age must be a positive integer greater than 0.\n";
                 clearInput();
                 continue;
             }
+            if (age <= 0) {
+                std::cout << "[ERROR] Age must be a positive integer greater than 0.\n";
+                continue;
+            }
 
             std::cout << "[ADD PATIENT] Enter Severity Score (1-10): ";
-            if (!(std::cin >> severity) || severity < 1 || severity > 10) {
+            if (!(std::cin >> severity)) {
+                if (std::cin.eof()) {
+                    std::cout << "\n[INFO] Input stream closed (EOF). Exiting TriageCare Backend.\n";
+                    break;
+                }
                 std::cout << "[ERROR] Severity must be a scale value from 1 to 10.\n";
                 clearInput();
+                continue;
+            }
+            if (severity < 1 || severity > 10) {
+                std::cout << "[ERROR] Severity must be a scale value from 1 to 10.\n";
                 continue;
             }
 
@@ -272,7 +296,16 @@ int main() {
             std::cout << "  Choice: ";
             
             int exitChoice = 0;
-            if (std::cin >> exitChoice && exitChoice == 1) {
+            if (!(std::cin >> exitChoice)) {
+                if (std::cin.eof()) {
+                    std::cout << "\n[INFO] Input stream closed (EOF). Exiting TriageCare Backend.\n";
+                    break;
+                }
+                std::cout << "\nExit canceled. Returning to Dashboard.\n";
+                clearInput();
+                continue;
+            }
+            if (exitChoice == 1) {
                 std::cout << "\nSession terminated successfully. Goodbye!\n";
                 break;
             } else {
