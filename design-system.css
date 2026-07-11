@@ -37,7 +37,7 @@
   --tc-radius-sm: 6px;
   --tc-radius-md: 10px;
   --tc-radius-lg: 16px;
-  --tc-radius-xl: 20px;      /* Main container & Card radius */
+  --tc-radius-xl: 16px;      /* Main container & Card radius */
   --tc-radius-full: 9999px;  /* Pill shape */
 
   /* Grayscale Palette (Slate) */
@@ -372,13 +372,19 @@ a:hover {
   border-radius: var(--tc-radius-lg);
 }
 
-/* Icon Wrap */
 .tc-btn-icon-only {
-  padding: 10px;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   border-radius: var(--tc-radius-md);
 }
 .tc-btn-sm.tc-btn-icon-only {
-  padding: 6px;
+  width: 32px;
+  height: 32px;
+  padding: 0;
   border-radius: var(--tc-radius-sm);
 }
 
@@ -556,9 +562,10 @@ select.tc-input {
 }
 
 .tc-card-title {
-  font-size: var(--tc-font-lg);
+  font-size: var(--tc-font-base);
   font-weight: var(--tc-weight-semibold);
   color: var(--tc-color-text-main);
+  letter-spacing: -0.01em;
 }
 
 .tc-card-body {
@@ -1023,3 +1030,327 @@ select.tc-input {
   );
   background-size: 200% 100%;
 }
+
+/* ==========================================================================
+   13. Global App Layout & Views (Unified Polish Pass)
+   ========================================================================== */
+
+.dashboard-grid-container {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.main-viewport {
+  background-color: var(--tc-color-bg);
+  padding: var(--tc-space-8) var(--tc-space-10);
+  max-width: 1440px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--tc-space-8);
+  overflow-y: auto;
+}
+
+.header-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--tc-space-4);
+  padding-bottom: var(--tc-space-4);
+  border-bottom: 1px solid var(--tc-color-border);
+}
+
+.header-user-wrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--tc-space-4);
+}
+
+.avatar-admin {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--tc-radius-full);
+  background-color: var(--tc-color-primary);
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--tc-weight-bold);
+  font-size: var(--tc-font-sm);
+  border: 2px solid var(--tc-color-primary-border);
+  box-shadow: var(--tc-shadow-sm);
+  cursor: pointer;
+  transition: var(--tc-transition-fast);
+}
+
+.avatar-admin:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--tc-shadow-md);
+  border-color: var(--tc-color-primary);
+}
+
+/* Workspace Split Layout */
+.workspace-split {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: var(--tc-space-8);
+  align-items: start;
+}
+
+.right-sidebar-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tc-space-8);
+}
+
+/* Action Buttons Grid */
+.quick-actions-stack {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--tc-space-3);
+}
+
+.quick-actions-stack .tc-btn {
+  width: 100%;
+  justify-content: center;
+  padding: var(--tc-space-3);
+  font-size: var(--tc-font-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: var(--tc-weight-semibold);
+}
+
+/* Next Patient Card Component */
+.next-patient-profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: var(--tc-space-4) 0;
+  gap: var(--tc-space-4);
+}
+
+.next-patient-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: var(--tc-radius-full);
+  background-color: var(--tc-color-primary-soft);
+  border: 1px solid var(--tc-color-primary-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--tc-color-primary);
+  font-size: var(--tc-font-2xl);
+  font-weight: var(--tc-weight-bold);
+  box-shadow: var(--tc-shadow-sm);
+  transition: var(--tc-transition-normal);
+}
+
+.next-patient-vitals {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1px;
+  background-color: var(--tc-color-border);
+  border-radius: var(--tc-radius-md);
+  overflow: hidden;
+  border: 1px solid var(--tc-color-border);
+  margin: var(--tc-space-2) 0;
+}
+
+.vital-stat-box {
+  background-color: var(--tc-color-slate-50);
+  display: flex;
+  flex-direction: column;
+  padding: var(--tc-space-3);
+  gap: var(--tc-space-1);
+}
+
+.vital-stat-label {
+  font-size: 10px;
+  color: var(--tc-color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: var(--tc-weight-medium);
+}
+
+.vital-stat-value {
+  font-size: var(--tc-font-sm);
+  font-weight: var(--tc-weight-semibold);
+  color: var(--tc-color-text-main);
+}
+
+/* Form Layouts & Centered Containers */
+.form-centered-container,
+.card-centered-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  padding: var(--tc-space-10) 0;
+  width: 100%;
+}
+
+.form-card,
+.treat-card {
+  width: 100%;
+  max-width: 540px;
+  background-color: var(--tc-color-surface);
+  border: 1px solid var(--tc-color-border);
+  border-radius: var(--tc-radius-xl);
+  padding: var(--tc-space-8);
+  box-shadow: var(--tc-shadow-xl);
+  transition: var(--tc-transition-normal);
+}
+
+.form-card:hover,
+.treat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--tc-shadow-2xl);
+  border-color: var(--tc-color-primary-border);
+}
+
+.form-actions-row {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: var(--tc-space-3);
+  margin-top: var(--tc-space-8);
+  padding-top: var(--tc-space-6);
+  border-top: 1px solid var(--tc-color-divider);
+}
+
+/* Treat Card Patient Details */
+.avatar-large-wrapper {
+  position: relative;
+  margin-bottom: var(--tc-space-6);
+}
+
+.avatar-large-circle {
+  width: 88px;
+  height: 88px;
+  border-radius: var(--tc-radius-full);
+  background-color: var(--tc-color-danger-bg);
+  color: var(--tc-color-danger);
+  border: 2px solid var(--tc-color-danger-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--tc-font-3xl);
+  font-weight: var(--tc-weight-bold);
+  box-shadow: var(--tc-shadow-md);
+  transition: var(--tc-transition-normal);
+}
+
+.patient-vitals-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background-color: var(--tc-color-border);
+  border-radius: var(--tc-radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--tc-color-border);
+  margin: var(--tc-space-6) 0 var(--tc-space-8) 0;
+}
+
+.vital-item {
+  background-color: var(--tc-color-slate-50);
+  display: flex;
+  flex-direction: column;
+  padding: var(--tc-space-4);
+  gap: var(--tc-space-1);
+}
+
+.vital-label {
+  font-size: 10px;
+  font-weight: var(--tc-weight-semibold);
+  color: var(--tc-color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.vital-value {
+  font-size: var(--tc-font-md);
+  font-weight: var(--tc-weight-bold);
+  color: var(--tc-color-text-main);
+}
+
+/* Modal Backdrop Blur Overlay style */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  transition: var(--tc-transition-normal);
+}
+
+[data-theme="dark"] .modal-backdrop {
+  background-color: rgba(9, 13, 22, 0.6);
+}
+
+.modal-card {
+  width: 100%;
+  max-width: 440px;
+  background-color: var(--tc-color-surface);
+  border: 1px solid var(--tc-color-border);
+  border-radius: var(--tc-radius-xl);
+  padding: var(--tc-space-8);
+  box-shadow: var(--tc-shadow-2xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--tc-space-5);
+  animation: modalScaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes modalScaleIn {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--tc-space-3);
+  margin-top: var(--tc-space-2);
+}
+
+.modal-actions .tc-btn {
+  flex: 1;
+  justify-content: center;
+  padding: 12px 20px;
+}
+
+/* Responsive Overrides */
+@media (max-width: 1200px) {
+  .workspace-split {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 900px) {
+  .dashboard-grid-container {
+    grid-template-columns: 1fr;
+  }
+  .tc-sidebar-container {
+    display: none;
+  }
+}
+
