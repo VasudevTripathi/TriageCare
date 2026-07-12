@@ -15,7 +15,7 @@
   let currentPatients = [];
   let totalPatientsCount = 12;
   let treatedPatientsCount = 5;
-  let currentTheme = 'light';
+  let currentTheme = 'dark';
 
   // Helper: Map severity score to status string
   function getStatusString(severity) {
@@ -105,7 +105,7 @@
     currentPatients = DEFAULT_PATIENTS.map(p => ({ ...p }));
     totalPatientsCount = 12;
     treatedPatientsCount = 5;
-    currentTheme = 'light';
+    currentTheme = 'dark';
     saveToLocalStorage();
   }
 
@@ -126,7 +126,41 @@
     navigateTo: function(url) {
       const s = serializeState();
       const separator = url.includes('?') ? '&' : '?';
-      window.location.href = url + separator + 's=' + s;
+      const targetUrl = url + separator + 's=' + s;
+      this.loadPage(targetUrl, true);
+    },
+
+    loadPage: async function(url, pushToHistory = true) {
+      try {
+        const viewport = document.querySelector('.main-viewport') || document.body;
+        viewport.style.opacity = '0.3';
+        viewport.style.transition = 'opacity 0.15s ease';
+
+        const response = await fetch(url);
+        if (!response.ok) throw new Error("Failed to load page");
+        const htmlText = await response.text();
+
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(htmlText, 'text/html');
+
+        document.title = doc.title;
+
+        // Replace entire body's innerHTML to handle sidebar state, header, and backdrops cleanly
+        document.body.innerHTML = doc.body.innerHTML;
+
+        const newViewport = document.querySelector('.main-viewport') || document.body;
+        newViewport.style.opacity = '0';
+        newViewport.classList.add('tc-animate-fade-in');
+
+        initializePageEvents();
+
+        if (pushToHistory) {
+          history.pushState({ url: url }, '', url);
+        }
+      } catch (error) {
+        console.error("PJAX navigation failed:", error);
+        window.location.href = url;
+      }
     },
 
     addPatient: function(name, age, severity) {
@@ -427,8 +461,8 @@
     }
   };
 
-  // 5. Setup DOM Event Listeners & Initialize
-  document.addEventListener('DOMContentLoaded', () => {
+  // 5. Setup Page Event Listeners & PJAX Interceptors
+  function initializePageEvents() {
     // Apply Theme
     if (currentTheme === 'dark') {
       document.documentElement.setAttribute('data-theme', 'dark');
@@ -461,7 +495,9 @@
       if (target) {
         a.removeAttribute('href');
         a.style.cursor = 'pointer';
-        a.addEventListener('click', (e) => {
+        const newA = a.cloneNode(true);
+        a.parentNode.replaceChild(newA, a);
+        newA.addEventListener('click', (e) => {
           e.preventDefault();
           window.TriageState.navigateTo(target);
         });
@@ -483,7 +519,9 @@
       if (target) {
         el.removeAttribute('onclick');
         el.style.cursor = 'pointer';
-        el.addEventListener('click', (e) => {
+        const newEl = el.cloneNode(true);
+        el.parentNode.replaceChild(newEl, el);
+        newEl.addEventListener('click', (e) => {
           e.preventDefault();
           window.TriageState.navigateTo(target);
         });
@@ -493,22 +531,27 @@
     // C. Theme toggler
     const themeToggleBtn = document.getElementById('themeToggleBtn');
     if (themeToggleBtn) {
-      themeToggleBtn.addEventListener('click', () => {
+      const newToggleBtn = themeToggleBtn.cloneNode(true);
+      themeToggleBtn.parentNode.replaceChild(newToggleBtn, themeToggleBtn);
+      const newThemeIcon = newToggleBtn.querySelector('#themeIcon') || document.getElementById('themeIcon');
+      newToggleBtn.addEventListener('click', () => {
         const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
         if (isDark) {
           document.documentElement.removeAttribute('data-theme');
           currentTheme = 'light';
-          if (themeIcon) {
-            themeIcon.innerHTML = `<path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>`;
+          if (newThemeIcon) {
+            newThemeIcon.innerHTML = `<path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>`;
           }
         } else {
           document.documentElement.setAttribute('data-theme', 'dark');
           currentTheme = 'dark';
-          if (themeIcon) {
-            themeIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m11.314 11.314l.707.707M12 8a4 4 0 100 8 4 4 0 000-8z" />`;
+          if (newThemeIcon) {
+            newThemeIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m11.314 11.314l.707.707M12 8a4 4 0 100 8 4 4 0 000-8z" />`;
           }
         }
         saveToLocalStorage();
+        // Also re-apply to header elements after toggling if needed
+        initializePageEvents();
       });
     }
 
@@ -527,7 +570,6 @@
         const ageVal = ageInput.value.trim();
         const severityVal = severitySelect.value;
 
-        // Validation checks
         if (!name || !ageVal || !severityVal) {
           alert("All fields are required.");
           return;
@@ -546,10 +588,8 @@
           return;
         }
 
-        // Add the patient
         const newP = window.TriageState.addPatient(name, age, severity);
         if (newP) {
-          // Navigate back to Dashboard with state
           window.TriageState.navigateTo('index.html');
         }
       });
@@ -560,7 +600,9 @@
     if (nextPatientCard) {
       const treatNowBtn = nextPatientCard.querySelector('.tc-card-footer button.tc-btn-primary');
       if (treatNowBtn) {
-        treatNowBtn.addEventListener('click', (e) => {
+        const newTreatNowBtn = treatNowBtn.cloneNode(true);
+        treatNowBtn.parentNode.replaceChild(newTreatNowBtn, treatNowBtn);
+        newTreatNowBtn.addEventListener('click', (e) => {
           e.preventDefault();
           window.TriageState.treatNextPatient();
         });
@@ -570,7 +612,9 @@
     // F. Exit Modal confirmation actions
     const confirmExitBtn = document.getElementById('confirmExitBtn');
     if (confirmExitBtn) {
-      confirmExitBtn.addEventListener('click', (e) => {
+      const newConfirmExitBtn = confirmExitBtn.cloneNode(true);
+      confirmExitBtn.parentNode.replaceChild(newConfirmExitBtn, confirmExitBtn);
+      newConfirmExitBtn.addEventListener('click', (e) => {
         e.preventDefault();
         window.TriageState.navigateTo('index.html');
       });
@@ -579,13 +623,24 @@
     if (cancelExitBtn) {
       cancelExitBtn.removeAttribute('href');
       cancelExitBtn.style.cursor = 'pointer';
-      cancelExitBtn.addEventListener('click', (e) => {
+      const newCancelExitBtn = cancelExitBtn.cloneNode(true);
+      cancelExitBtn.parentNode.replaceChild(newCancelExitBtn, cancelExitBtn);
+      newCancelExitBtn.addEventListener('click', (e) => {
         e.preventDefault();
         window.TriageState.navigateTo('index.html');
       });
     }
 
-    // Initial Sync
+    // Sync UI with state
     window.TriageState.syncUI();
+  }
+
+  // 6. Setup DOM Event Listeners & Initialize
+  document.addEventListener('DOMContentLoaded', () => {
+    initializePageEvents();
+  });
+
+  window.addEventListener('popstate', (e) => {
+    window.TriageState.loadPage(window.location.href, false);
   });
 })();

@@ -5,6 +5,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TriageCare - Emergency Patient Triage System</title>
   <link rel="stylesheet" href="design-system.css">
+  <script>
+    (function() {
+      try {
+        let theme = 'dark';
+        const params = new URLSearchParams(window.location.search);
+        let s = params.get('s');
+        if (!s) {
+          s = localStorage.getItem('tc_state');
+        }
+        if (s) {
+          const jsonStr = decodeURIComponent(escape(atob(s)));
+          const data = JSON.parse(jsonStr);
+          if (data && data.th) {
+            theme = data.th;
+          }
+        }
+        if (theme === 'dark') {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        } else {
+          document.documentElement.removeAttribute('data-theme');
+        }
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
 
 </head>
 <body>
@@ -91,7 +117,7 @@
       <!-- Top Summary Metrics Grid -->
       <section class="tc-grid-3">
         <!-- Metric Card 1: Total Patients -->
-        <div class="tc-card">
+        <div class="tc-card tc-card-glow">
           <div class="tc-card-header">
             <h5 class="tc-card-title tc-text-muted tc-text-sm" style="font-weight: var(--tc-weight-medium);">Total Patients</h5>
             <span class="tc-badge tc-badge-primary">All Time</span>

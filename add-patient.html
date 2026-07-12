@@ -5,6 +5,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TriageCare - Add New Patient</title>
   <link rel="stylesheet" href="design-system.css">
+  <script>
+    (function() {
+      try {
+        let theme = 'dark';
+        const params = new URLSearchParams(window.location.search);
+        let s = params.get('s');
+        if (!s) {
+          s = localStorage.getItem('tc_state');
+        }
+        if (s) {
+          const jsonStr = decodeURIComponent(escape(atob(s)));
+          const data = JSON.parse(jsonStr);
+          if (data && data.th) {
+            theme = data.th;
+          }
+        }
+        if (theme === 'dark') {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        } else {
+          document.documentElement.removeAttribute('data-theme');
+        }
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
 
 </head>
 <body>
