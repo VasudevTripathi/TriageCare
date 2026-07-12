@@ -114,31 +114,31 @@
       <!-- Centered Card Form Workspace -->
       <section class="form-centered-container">
         <div class="form-card">
-          <h2 class="tc-text-main" style="font-size: var(--tc-font-2xl); margin-bottom: var(--tc-space-8); font-weight: var(--tc-weight-bold); letter-spacing: -0.02em;">Add New Patient</h2>
+          <h2 class="tc-text-main" style="font-size: var(--tc-font-lg); margin-bottom: var(--tc-space-6); font-weight: var(--tc-weight-bold); letter-spacing: -0.02em;">Add New Patient</h2>
           
           <form id="addPatientForm">
             
             <!-- Patient ID -->
             <div class="tc-input-wrapper">
-              <label class="tc-label" for="patientId">Patient ID</label>
-              <input type="text" id="patientId" class="tc-input" value="P006" readonly style="background-color: var(--tc-color-slate-50); cursor: not-allowed;" title="Auto-generated Patient ID Token">
+              <label class="tc-label" for="patientId" style="font-size: var(--tc-font-xs); font-weight: var(--tc-weight-semibold); text-transform: uppercase; letter-spacing: 0.05em; color: var(--tc-color-text-muted); margin-bottom: var(--tc-space-2);">Patient ID</label>
+              <input type="text" id="patientId" class="tc-input" value="P006" readonly title="Auto-generated Patient ID Token">
             </div>
 
             <!-- Patient Name -->
             <div class="tc-input-wrapper">
-              <label class="tc-label" for="patientName">Patient Name</label>
+              <label class="tc-label" for="patientName" style="font-size: var(--tc-font-xs); font-weight: var(--tc-weight-semibold); text-transform: uppercase; letter-spacing: 0.05em; color: var(--tc-color-text-muted); margin-bottom: var(--tc-space-2);">Patient Name</label>
               <input type="text" id="patientName" class="tc-input" placeholder="e.g. Emily Watson" required>
             </div>
 
             <!-- Age -->
             <div class="tc-input-wrapper">
-              <label class="tc-label" for="patientAge">Age</label>
+              <label class="tc-label" for="patientAge" style="font-size: var(--tc-font-xs); font-weight: var(--tc-weight-semibold); text-transform: uppercase; letter-spacing: 0.05em; color: var(--tc-color-text-muted); margin-bottom: var(--tc-space-2);">Age</label>
               <input type="number" id="patientAge" class="tc-input" placeholder="e.g. 29" min="1" max="120" required>
             </div>
 
             <!-- Severity level -->
             <div class="tc-input-wrapper">
-              <label class="tc-label" for="patientSeverity">Severity Level</label>
+              <label class="tc-label" for="patientSeverity" style="font-size: var(--tc-font-xs); font-weight: var(--tc-weight-semibold); text-transform: uppercase; letter-spacing: 0.05em; color: var(--tc-color-text-muted); margin-bottom: var(--tc-space-2);">Severity Level</label>
               <select id="patientSeverity" class="tc-input" required>
                 <option value="" disabled selected>Select level (1 - 10)</option>
                 <option value="1">1 - Extremely Mild</option>
