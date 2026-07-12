@@ -511,7 +511,14 @@
             const btn = document.getElementById('pageTreatPatientBtn');
             if (btn) {
               btn.addEventListener('click', () => {
-                window.TriageState.treatNextPatient();
+                const card = document.querySelector('.treat-card');
+                if (card) {
+                  playSuccessAnimation(card, () => {
+                    window.TriageState.treatNextPatient();
+                  });
+                } else {
+                  window.TriageState.treatNextPatient();
+                }
               });
             }
           }
@@ -526,8 +533,122 @@
     }
   };
 
+  // Helper to lazily load Lottie library via CDN
+  function ensureLottie(callback) {
+    if (typeof lottie !== 'undefined') {
+      if (callback) callback();
+      return;
+    }
+    let script = document.querySelector('script[src*="lottie.min.js"]');
+    if (!script) {
+      script = document.createElement('script');
+      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js';
+      script.async = true;
+      document.head.appendChild(script);
+    }
+    const onloadHandler = () => {
+      if (callback) callback();
+    };
+    script.addEventListener('load', onloadHandler);
+  }
+
+  // Play success animation once over a given container element
+  function playSuccessAnimation(container, callback) {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) {
+      if (callback) callback();
+      return;
+    }
+
+    ensureLottie(() => {
+      // Create overlay success layout
+      const overlay = document.createElement('div');
+      overlay.style.position = 'absolute';
+      overlay.style.top = '0';
+      overlay.style.left = '0';
+      overlay.style.width = '100%';
+      overlay.style.height = '100%';
+      overlay.style.display = 'flex';
+      overlay.style.justifyContent = 'center';
+      overlay.style.alignItems = 'center';
+      overlay.style.backgroundColor = 'var(--tc-color-surface)';
+      overlay.style.borderRadius = 'inherit';
+      overlay.style.zIndex = '999';
+      overlay.style.opacity = '0';
+      overlay.style.transform = 'scale(0.95)';
+      overlay.style.transition = 'opacity 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1)';
+      
+      const lottieContainer = document.createElement('div');
+      lottieContainer.style.width = '140px';
+      lottieContainer.style.height = '140px';
+      overlay.appendChild(lottieContainer);
+
+      const originalPosition = window.getComputedStyle(container).position;
+      if (originalPosition === 'static') {
+        container.style.position = 'relative';
+      }
+
+      container.appendChild(overlay);
+      
+      // Trigger transition
+      overlay.offsetHeight;
+      overlay.style.opacity = '1';
+      overlay.style.transform = 'scale(1)';
+      
+      const anim = lottie.loadAnimation({
+        container: lottieContainer,
+        renderer: 'svg',
+        loop: false,
+        autoplay: true,
+        path: 'assets/Success.json'
+      });
+      
+      let callbackExecuted = false;
+      const finish = () => {
+        if (callbackExecuted) return;
+        callbackExecuted = true;
+        overlay.style.opacity = '0';
+        overlay.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+          overlay.remove();
+          if (originalPosition === 'static') {
+            container.style.position = '';
+          }
+          if (callback) callback();
+        }, 280);
+      };
+
+      anim.addEventListener('complete', finish);
+      setTimeout(finish, 1800); // safety fallback
+    });
+  }
+
+  // Initialize heartbeat Lottie animation
+  function initHeartbeat() {
+    const heartbeatContainer = document.getElementById('heartbeat-lottie');
+    if (!heartbeatContainer) return;
+    
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
+
+    ensureLottie(() => {
+      if (heartbeatContainer.querySelector('svg')) return; // already rendered
+      
+      lottie.loadAnimation({
+        container: heartbeatContainer,
+        renderer: 'svg',
+        loop: true,
+        autoplay: true,
+        path: 'assets/heartbeat ECG.json'
+      });
+    });
+  }
+
   // 5. Setup Page Event Listeners & PJAX Interceptors
   function initializePageEvents() {
+    // Init heartbeat animation
+    initHeartbeat();
+
     // Apply Theme
     if (currentTheme === 'dark') {
       document.documentElement.setAttribute('data-theme', 'dark');
@@ -655,7 +776,14 @@
 
         const newP = window.TriageState.addPatient(name, age, severity);
         if (newP) {
-          window.TriageState.navigateTo('index.html');
+          const card = document.querySelector('.form-card');
+          if (card) {
+            playSuccessAnimation(card, () => {
+              window.TriageState.navigateTo('index.html');
+            });
+          } else {
+            window.TriageState.navigateTo('index.html');
+          }
         }
       });
     }
@@ -669,7 +797,13 @@
         treatNowBtn.parentNode.replaceChild(newTreatNowBtn, treatNowBtn);
         newTreatNowBtn.addEventListener('click', (e) => {
           e.preventDefault();
-          window.TriageState.treatNextPatient();
+          if (nextPatientCard) {
+            playSuccessAnimation(nextPatientCard, () => {
+              window.TriageState.treatNextPatient();
+            });
+          } else {
+            window.TriageState.treatNextPatient();
+          }
         });
       }
     }

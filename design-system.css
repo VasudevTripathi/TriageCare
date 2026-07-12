@@ -1584,6 +1584,20 @@ select.tc-input {
   animation: tc-fade-in 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
+/* Lottie Animation Styles */
+#heartbeat-lottie {
+  opacity: 0.28;
+  mix-blend-mode: plus-lighter;
+  filter: drop-shadow(0 0 6px rgba(163, 230, 53, 0.45));
+  transition: opacity 0.3s ease, filter 0.3s ease;
+}
+
+[data-theme="light"] #heartbeat-lottie {
+  opacity: 0.45;
+  mix-blend-mode: multiply;
+  filter: none;
+}
+
 /* Accessibility Support for Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
   * {
