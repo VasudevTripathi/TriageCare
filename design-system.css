@@ -207,6 +207,13 @@ html {
 body {
   font-family: var(--tc-font-family);
   background-color: var(--tc-color-bg);
+  background-image: 
+    linear-gradient(rgba(248, 250, 252, 0.90), rgba(248, 250, 252, 0.90)),
+    url('assets/subtle_mesh_bg.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
   color: var(--tc-color-text-secondary);
   font-weight: var(--tc-weight-regular);
   line-height: 1.5;
@@ -231,7 +238,12 @@ body::before {
 [data-theme="dark"] body {
   background-image: 
     radial-gradient(circle at 50% 0%, rgba(132, 204, 22, 0.02) 0%, transparent 50%),
-    radial-gradient(circle at 0% 100%, rgba(52, 211, 153, 0.01) 0%, transparent 40%);
+    radial-gradient(circle at 0% 100%, rgba(52, 211, 153, 0.01) 0%, transparent 40%),
+    linear-gradient(rgba(9, 9, 11, 0.82), rgba(9, 9, 11, 0.82)),
+    url('assets/subtle_mesh_bg.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   background-attachment: fixed;
 }
 
@@ -813,10 +825,14 @@ select.tc-input {
 }
 
 .tc-table-avatar {
-  width: 32px;
-  height: 32px;
+  width: 38px;
+  height: 38px;
   border-radius: var(--tc-radius-full);
   background-color: var(--tc-color-primary-soft);
+  background-image: url('assets/avatar_placeholder.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -824,6 +840,12 @@ select.tc-input {
   font-size: var(--tc-font-xs);
   color: var(--tc-color-primary);
   border: 1px solid var(--tc-color-primary-border);
+}
+
+.tc-sidebar-footer .tc-table-avatar {
+  width: 42px;
+  height: 42px;
+  font-size: var(--tc-font-sm);
 }
 
 /* ==========================================================================
@@ -1277,6 +1299,10 @@ select.tc-input {
   height: 40px;
   border-radius: var(--tc-radius-full);
   background-color: var(--tc-color-primary);
+  background-image: url('assets/avatar_placeholder.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   color: #FFFFFF;
   display: flex;
   align-items: center;
@@ -1337,16 +1363,20 @@ select.tc-input {
 }
 
 .next-patient-avatar {
-  width: 72px;
-  height: 72px;
+  width: 54px;
+  height: 54px;
   border-radius: var(--tc-radius-full);
   background-color: var(--tc-color-primary-soft);
+  background-image: url('assets/avatar_placeholder.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   border: 1px solid var(--tc-color-primary-border);
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--tc-color-primary);
-  font-size: var(--tc-font-2xl);
+  font-size: var(--tc-font-lg);
   font-weight: var(--tc-weight-bold);
   box-shadow: var(--tc-shadow-sm);
   transition: var(--tc-transition-normal);
@@ -1442,16 +1472,20 @@ select.tc-input {
 }
 
 .avatar-large-circle {
-  width: 88px;
-  height: 88px;
+  width: 78px;
+  height: 78px;
   border-radius: var(--tc-radius-full);
   background-color: var(--tc-color-danger-bg);
+  background-image: url('assets/avatar_placeholder.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   color: var(--tc-color-danger);
   border: 2px solid var(--tc-color-danger-border);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: var(--tc-font-3xl);
+  font-size: var(--tc-font-2xl);
   font-weight: var(--tc-weight-bold);
   box-shadow: var(--tc-shadow-md);
   transition: var(--tc-transition-normal);
