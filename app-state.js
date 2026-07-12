@@ -453,7 +453,7 @@
         if (treatCard.id !== 'exitModalCard') {
           if (patients.length === 0) {
             treatCard.innerHTML = `
-              <h2 class="tc-text-main" style="font-size: var(--tc-font-2xl); margin-bottom: var(--tc-space-6); font-weight: var(--tc-weight-bold); letter-spacing: -0.02em;">Next Patient To Treat</h2>
+              <h2 class="tc-text-main" style="font-size: var(--tc-font-lg); margin-bottom: var(--tc-space-6); font-weight: var(--tc-weight-bold); letter-spacing: -0.02em;">Next Patient To Treat</h2>
               <div style="padding: var(--tc-space-10) 0; text-align: center; color: var(--tc-color-text-muted);">
                 <p class="tc-text-semibold" style="font-size: var(--tc-font-lg); margin-bottom: var(--tc-space-2);">No patients waiting.</p>
                 <span class="tc-text-xs">There are no patients awaiting treatment in the priority queue.</span>
@@ -470,7 +470,7 @@
             const badgeClass = this.getStatusBadgeClass(topPatient.status);
 
             treatCard.innerHTML = `
-              <h2 class="tc-text-main" style="font-size: var(--tc-font-2xl); margin-bottom: var(--tc-space-6); font-weight: var(--tc-weight-bold); letter-spacing: -0.02em;">Next Patient To Treat</h2>
+              <h2 class="tc-text-main" style="font-size: var(--tc-font-lg); margin-bottom: var(--tc-space-6); font-weight: var(--tc-weight-bold); letter-spacing: -0.02em;">Next Patient To Treat</h2>
               
               <!-- Large Avatar -->
               <div class="avatar-large-wrapper">

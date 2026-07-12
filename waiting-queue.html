@@ -112,17 +112,19 @@
       </section>
 
       <!-- Waiting Queue Table Container -->
-      <section class="queue-table-card">
-        <div class="tc-card-header" style="margin-bottom: var(--tc-space-6);">
-          <div>
-            <h2 class="tc-card-title" style="font-size: var(--tc-font-2xl); font-weight: var(--tc-weight-bold); letter-spacing: -0.02em;">Waiting Queue</h2>
-            <p class="tc-text-muted tc-text-xs" style="margin-bottom: 0; margin-top: 4px;">Real-time priority list of emergency patients currently waiting for triage.</p>
+      <section class="queue-table-card tc-card" style="padding: 0; overflow: hidden;">
+        <div style="border-bottom: 1px solid var(--tc-color-border); padding: var(--tc-space-5) var(--tc-space-6);">
+          <div class="tc-flex tc-align-center tc-justify-between">
+            <div>
+              <h2 class="tc-card-title" style="font-size: var(--tc-font-lg); font-weight: var(--tc-weight-bold); letter-spacing: -0.02em; margin: 0;">Waiting Queue</h2>
+              <p class="tc-text-muted tc-text-xs" style="margin: var(--tc-space-1) 0 0 0; font-weight: var(--tc-weight-medium);">Real-time priority list of emergency patients currently waiting for triage.</p>
+            </div>
+            <span class="tc-badge tc-badge-primary" style="font-size: 10px; padding: 2px 8px;">7 Active Cases</span>
           </div>
-          <span class="tc-badge tc-badge-primary">7 Active Cases</span>
         </div>
         
         <!-- Responsive Data Table -->
-        <div class="tc-table-wrapper" style="box-shadow: none; border-radius: var(--tc-radius-lg);">
+        <div class="tc-table-wrapper" style="box-shadow: none; border-radius: 0; border: none;">
           <div class="tc-table-container">
             <table class="tc-table">
               <thead>
