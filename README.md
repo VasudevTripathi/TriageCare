@@ -15,10 +15,10 @@ Both systems implement a priority-based queue where incoming patients are triage
 
 TriageCare features a premium, responsive layout that supports both light and dark modes with glassmorphic cards, smooth hover lift actions, and reactive status indications.
 
-### Light Theme Dashboard
+### Dark Theme Dashboard
 ![TriageCare Light Mode Dashboard](assets/dashboard-light.png)
 
-### Dark Theme Dashboard
+### Treat Patient
 ![TriageCare Dark Mode Dashboard](assets/dashboard-dark.png)
 
 ### Dynamic Patient Admission
