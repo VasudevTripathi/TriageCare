@@ -238,8 +238,8 @@ body::before {
 
 
 /* Enable smooth transitions when toggling theme */
-body, aside, main, .tc-card, .tc-sidebar-item, h1, h2, h3, h4, h5, p, span, .tc-badge, input, select, textarea {
-  transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease, backdrop-filter 0.4s ease;
+body, aside, main, .tc-card, .tc-sidebar-item, .tc-sidebar-icon, .tc-logo, h1, h2, h3, h4, h5, p, span, .tc-badge, input, select, textarea, .tc-table, .tc-table th, .tc-table td, .modal-backdrop, .modal-card {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, backdrop-filter 0.3s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 /* Scrollbar Customization */
@@ -334,20 +334,12 @@ a:hover {
 }
 
 .tc-btn:hover:not(:disabled) {
-  transform: scale(1.05); /* Enlarge more noticeably on hover */
-}
-
-@keyframes tc-btn-shake {
-  0% { transform: translateY(0) scale(0.97) translateX(0); }
-  20% { transform: translateY(0) scale(0.97) translateX(-2px) rotate(-1deg); }
-  40% { transform: translateY(0) scale(0.97) translateX(2px) rotate(1deg); }
-  60% { transform: translateY(0) scale(0.97) translateX(-1px) rotate(-0.5deg); }
-  80% { transform: translateY(0) scale(0.97) translateX(1px) rotate(0.5deg); }
-  100% { transform: translateY(0) scale(0.97) translateX(0) rotate(0); }
+  transform: translateY(-2px) scale(1.035);
 }
 
 .tc-btn:active:not(:disabled) {
-  animation: tc-btn-shake 0.15s ease-in-out;
+  transform: translateY(1px) scale(0.975);
+  transition: transform 0.08s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .tc-btn:disabled {
@@ -595,9 +587,9 @@ select.tc-input {
 }
 
 .tc-card:hover {
-  transform: translateY(-3px) scale(1.01);
+  transform: translateY(-6px) scale(1.015);
   box-shadow: var(--tc-shadow-xl);
-  border-color: var(--tc-color-primary-border);
+  border-color: var(--tc-color-border-hover);
 }
 
 /* Glassmorphism Variant */
@@ -622,7 +614,7 @@ select.tc-input {
 }
 
 .tc-card-hover:hover {
-  transform: translateY(-3px) scale(1.01);
+  transform: translateY(-6px) scale(1.015);
   box-shadow: var(--tc-shadow-xl);
   border-color: var(--tc-color-border-hover);
 }
@@ -865,6 +857,7 @@ select.tc-input {
 .tc-sidebar-item:hover {
   background-color: var(--tc-color-slate-50);
   color: var(--tc-color-text-main);
+  transform: translateX(4px);
 }
 
 .tc-sidebar-item:hover .tc-sidebar-icon {
@@ -882,16 +875,22 @@ select.tc-input {
 }
 
 /* Linear-style Active indicator strip (Light theme) */
-.tc-sidebar-item-active::before {
+.tc-sidebar-item::before {
   content: '';
   position: absolute;
   left: 0;
   top: 50%;
-  transform: translateY(-50%);
+  transform: translateY(-50%) scaleY(0);
   height: 16px;
   width: 3px;
   background-color: var(--tc-color-primary);
   border-radius: 0 4px 4px 0;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform-origin: center;
+}
+
+.tc-sidebar-item-active::before {
+  transform: translateY(-50%) scaleY(1);
 }
 
 [data-theme="dark"] .tc-sidebar-item-active {
@@ -908,17 +907,10 @@ select.tc-input {
   filter: drop-shadow(0 0 6px rgba(132, 204, 22, 0.5));
 }
 
-[data-theme="dark"] .tc-sidebar-item-active::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
+[data-theme="dark"] .tc-sidebar-item::before {
+  background-color: #84cc16;
   height: 20px;
   width: 4px;
-  background-color: #84cc16;
-  border-radius: 0 4px 4px 0;
-  display: block !important;
   box-shadow: 0 0 8px #84cc16;
 }
 

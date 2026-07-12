@@ -25,6 +25,32 @@
     return 'Low';
   }
 
+  // Helper: Decelerating value counter animator
+  function animateValue(obj, start, end, duration) {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      obj.textContent = String(end);
+      return;
+    }
+    if (start === end) {
+      obj.textContent = String(end);
+      return;
+    }
+    let startTimestamp = null;
+    const step = (timestamp) => {
+      if (!startTimestamp) startTimestamp = timestamp;
+      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+      // Easing: easeOutQuad
+      const easedProgress = progress * (2 - progress);
+      obj.textContent = String(Math.floor(easedProgress * (end - start) + start));
+      if (progress < 1) {
+        window.requestAnimationFrame(step);
+      } else {
+        obj.textContent = String(end);
+      }
+    };
+    window.requestAnimationFrame(step);
+  }
+
   // 3. Base64 State Serialization & Deserialization
   function serializeState() {
     const data = {
@@ -133,10 +159,35 @@
     loadPage: async function(url, pushToHistory = true) {
       try {
         const viewport = document.querySelector('.main-viewport') || document.body;
-        viewport.style.opacity = '0.3';
-        viewport.style.transition = 'opacity 0.15s ease';
+        
+        // If reduced motion is preferred, load page instantly with minimal opacity transition
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          viewport.style.opacity = '0.3';
+          const response = await fetch(url);
+          if (!response.ok) throw new Error("Failed to load page");
+          const htmlText = await response.text();
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(htmlText, 'text/html');
+          document.title = doc.title;
+          document.body.innerHTML = doc.body.innerHTML;
+          const newViewport = document.querySelector('.main-viewport') || document.body;
+          newViewport.style.opacity = '1';
+          initializePageEvents();
+          if (pushToHistory) history.pushState({ url: url }, '', url);
+          return;
+        }
 
-        const response = await fetch(url);
+        // Active page leaving animation (fade, small upward/slide-up movement, scale down)
+        viewport.style.transition = 'opacity 0.22s cubic-bezier(0.4, 0, 0.2, 1), transform 0.22s cubic-bezier(0.4, 0, 0.2, 1)';
+        viewport.style.opacity = '0';
+        viewport.style.transform = 'translateY(-6px) scale(0.99)';
+
+        // Fetch page while transitioning
+        const [response] = await Promise.all([
+          fetch(url),
+          new Promise(resolve => setTimeout(resolve, 220)) // matches transition duration
+        ]);
+
         if (!response.ok) throw new Error("Failed to load page");
         const htmlText = await response.text();
 
@@ -144,13 +195,21 @@
         const doc = parser.parseFromString(htmlText, 'text/html');
 
         document.title = doc.title;
-
-        // Replace entire body's innerHTML to handle sidebar state, header, and backdrops cleanly
         document.body.innerHTML = doc.body.innerHTML;
 
         const newViewport = document.querySelector('.main-viewport') || document.body;
+        
+        // Initial state for entrance animation (fade in, translate upward, slight scale)
         newViewport.style.opacity = '0';
-        newViewport.classList.add('tc-animate-fade-in');
+        newViewport.style.transform = 'translateY(12px) scale(0.985)';
+        
+        // Trigger reflow to apply initial states
+        newViewport.offsetHeight;
+
+        // Apply page entrance transition
+        newViewport.style.transition = 'opacity 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1)';
+        newViewport.style.opacity = '1';
+        newViewport.style.transform = 'translateY(0) scale(1)';
 
         initializePageEvents();
 
@@ -250,13 +309,19 @@
         const valueEl = card.querySelector('.tc-card-body p');
         if (!valueEl) return;
 
+        let targetValue = 0;
         if (titleText === 'Total Patients') {
-          valueEl.textContent = String(stats.total);
+          targetValue = stats.total;
         } else if (titleText === 'Waiting Patients') {
-          valueEl.textContent = String(stats.waiting);
+          targetValue = stats.waiting;
         } else if (titleText === 'Treated Patients') {
-          valueEl.textContent = String(stats.treated);
+          targetValue = stats.treated;
+        } else {
+          return;
         }
+
+        const currentValue = parseInt(valueEl.textContent, 10) || 0;
+        animateValue(valueEl, currentValue, targetValue, 600);
       });
 
       // Render Dashboard Queue Table (Top 5 only)
@@ -633,6 +698,44 @@
 
     // Sync UI with state
     window.TriageState.syncUI();
+
+    // Card Entrance & Stagger Animation
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      const cards = document.querySelectorAll('.tc-card');
+      cards.forEach((card, index) => {
+        // Set inline initial state
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(12px) scale(0.985)';
+        card.style.transition = 'opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1)';
+        card.style.transitionDelay = `${index * 45}ms`;
+        
+        requestAnimationFrame(() => {
+          card.style.opacity = '1';
+          card.style.transform = 'translateY(0) scale(1)';
+          
+          // Clear inline styles once stagger animation completes so class :hover styling functions properly
+          setTimeout(() => {
+            card.style.opacity = '';
+            card.style.transform = '';
+            card.style.transition = '';
+            card.style.transitionDelay = '';
+          }, 350 + (index * 45));
+        });
+      });
+    }
+
+    // Modal cancellation on Escape key
+    const escCancelHandler = (e) => {
+      if (e.key === 'Escape') {
+        const modalBackdrop = document.querySelector('.modal-backdrop');
+        if (modalBackdrop) {
+          e.preventDefault();
+          window.TriageState.navigateTo('index.html');
+        }
+      }
+    };
+    document.removeEventListener('keydown', escCancelHandler);
+    document.addEventListener('keydown', escCancelHandler);
   }
 
   // 6. Setup DOM Event Listeners & Initialize
