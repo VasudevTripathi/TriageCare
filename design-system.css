@@ -52,17 +52,17 @@
   --tc-color-slate-800: #1E293B;
   --tc-color-slate-900: #0F172A;
   
-  /* Primary Brand Colors */
-  --tc-color-primary: #2563EB;
-  --tc-color-primary-hover: #1D4ED8;
-  --tc-color-primary-active: #1E40AF;
-  --tc-color-primary-soft: #EFF6FF;
-  --tc-color-primary-border: #DBEAFE;
+  /* Primary Brand Colors - Adjusted to green/lime to match dark theme vibe */
+  --tc-color-primary: #4d7c0f;        /* lime-700 */
+  --tc-color-primary-hover: #3f620e;  /* lime-800 */
+  --tc-color-primary-active: #365314; /* lime-900 */
+  --tc-color-primary-soft: #f7fee7;   /* lime-50 */
+  --tc-color-primary-border: #d9f99d; /* lime-200 */
   
   /* Semantic Colors (Light Theme Defaults) */
-  --tc-color-success: #059669;
-  --tc-color-success-bg: #ECFDF5;
-  --tc-color-success-border: #D1FAE5;
+  --tc-color-success: #16a34a;
+  --tc-color-success-bg: #f0fdf4;
+  --tc-color-success-border: #bbf7d0;
 
   --tc-color-warning: #D97706;
   --tc-color-warning-bg: #FFFBEB;
@@ -72,9 +72,9 @@
   --tc-color-danger-bg: #FEF2F2;
   --tc-color-danger-border: #FEE2E2;
 
-  --tc-color-info: #2563EB;
-  --tc-color-info-bg: #EFF6FF;
-  --tc-color-info-border: #DBEAFE;
+  --tc-color-info: #0891b2;
+  --tc-color-info-bg: #ecfeff;
+  --tc-color-info-border: #cffafe;
 
   /* Theme-Specific Colors (Light Theme) */
   --tc-color-bg: #F8FAFC;            /* Soft off-white background */
@@ -204,12 +204,26 @@ html {
 body {
   font-family: var(--tc-font-family);
   background-color: var(--tc-color-bg);
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(132, 204, 22, 0.01) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(132, 204, 22, 0.01) 0%, transparent 45%);
+  background-attachment: fixed;
   color: var(--tc-color-text-secondary);
   font-weight: var(--tc-weight-regular);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+[data-theme="dark"] body {
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(132, 204, 22, 0.035) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(132, 204, 22, 0.035) 0%, transparent 45%);
+}
+
+/* Enable smooth transitions when toggling theme */
+body, aside, main, .tc-card, .tc-sidebar-item, h1, h2, h3, h4, h5, p, span, .tc-badge, input, select, textarea {
+  transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease, backdrop-filter 0.4s ease;
 }
 
 /* Scrollbar Customization */
@@ -304,11 +318,20 @@ a:hover {
 }
 
 .tc-btn:hover:not(:disabled) {
-  transform: translateY(-2px) scale(1.02);
+  transform: scale(1.05); /* Enlarge more noticeably on hover */
+}
+
+@keyframes tc-btn-shake {
+  0% { transform: translateY(0) scale(0.97) translateX(0); }
+  20% { transform: translateY(0) scale(0.97) translateX(-2px) rotate(-1deg); }
+  40% { transform: translateY(0) scale(0.97) translateX(2px) rotate(1deg); }
+  60% { transform: translateY(0) scale(0.97) translateX(-1px) rotate(-0.5deg); }
+  80% { transform: translateY(0) scale(0.97) translateX(1px) rotate(0.5deg); }
+  100% { transform: translateY(0) scale(0.97) translateX(0) rotate(0); }
 }
 
 .tc-btn:active:not(:disabled) {
-  transform: translateY(1px) scale(0.97);
+  animation: tc-btn-shake 0.15s ease-in-out;
 }
 
 .tc-btn:disabled {
@@ -548,6 +571,13 @@ select.tc-input {
   overflow: hidden;
 }
 
+[data-theme="dark"] .tc-card {
+  background-color: rgba(18, 18, 20, 0.55) !important;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
 .tc-card:hover {
   transform: translateY(-3px) scale(1.01);
   box-shadow: var(--tc-shadow-xl);
@@ -561,6 +591,12 @@ select.tc-input {
   -webkit-backdrop-filter: var(--tc-glass-blur);
   border: 1px solid var(--tc-glass-border);
   box-shadow: var(--tc-glass-shadow);
+}
+
+[data-theme="dark"] .tc-card-glass {
+  background-color: rgba(18, 18, 20, 0.45) !important;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 
 /* Interactive Hover Card (Linear & Vercel like) */
@@ -722,6 +758,13 @@ select.tc-input {
   flex-shrink: 0;
   transition: var(--tc-transition-normal);
   z-index: 100;
+}
+
+[data-theme="dark"] .tc-sidebar-container {
+  background-color: rgba(11, 11, 13, 0.55) !important;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .tc-sidebar-header {
@@ -1353,7 +1396,9 @@ select.tc-input {
 }
 
 [data-theme="dark"] .modal-backdrop {
-  background-color: rgba(9, 13, 22, 0.6);
+  background-color: rgba(9, 9, 11, 0.45) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 .modal-card {
