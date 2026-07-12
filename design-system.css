@@ -1476,4 +1476,29 @@ select.tc-input {
   animation: tc-fade-in 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
+/* Accessibility Support for Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-delay: -1ms !important;
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    background-attachment: initial !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0s !important;
+    transition-delay: 0s !important;
+  }
+  
+  .tc-btn:hover,
+  .tc-card:hover,
+  .tc-sidebar-item:hover {
+    transform: none !important;
+  }
+
+  .tc-btn-shake:active,
+  .tc-btn:active {
+    animation: none !important;
+    transform: none !important;
+  }
+}
+
 
