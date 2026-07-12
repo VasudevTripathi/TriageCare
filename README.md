@@ -53,6 +53,27 @@ graph TD
 
 ---
 
+## 🎨 Premium UI/UX & Motion System
+
+TriageCare integrates a premium interface standard matching the aesthetic design systems of modern products like Linear, Stripe, and Vercel.
+
+### 1. Lottie Micro-interactions
+* **ECG Heartbeat Animation**: A subtle, low-opacity (`28%`) vector animation (`heartbeat ECG.json`) continuously looping in the Dashboard header. It auto-blends into light/dark themes with hardware-accelerated glows.
+* **Success Feedback Animation**: Displays a dynamic overlay sequence (`Success.json`) on cards upon successful actions (e.g., admitting or treating patients) before fading out and transitioning the page state.
+* **Lazy Loading**: The Lottie runtime library is lazily loaded via CDN only when animations are triggered, keeping the initial payload lightweight.
+* **Accessibility**: Skip rules detect user `prefers-reduced-motion` settings to immediately execute state updates and bypass transitions.
+
+### 2. Atmospheric Background Image
+* **Global Mesh Background**: Uses a subtle mesh background image (`assets/subtle_mesh_bg.png`) applied to the body.
+* **Readability Overlays**: Blended with translucent overlays (`rgba(9, 9, 11, 0.82)` in dark mode and `rgba(248, 250, 252, 0.90)` in light mode) to preserve clear readability.
+* **Sidebar Masking**: Sidebar panels are styled with 100% solid, opaque backgrounds (`#FFFFFF` in light mode, `#0c0c0e` in dark mode) to keep navigation focus distinct and clean.
+
+### 3. Viewport Transitions & Card Staggering
+* **Fade-and-Slide Transitions**: Navigating between pages triggers a smooth 220ms–300ms transition. Active viewports translate upwards and scale down, while incoming contents slide up using a spring curve (`cubic-bezier(0.34, 1.56, 0.64, 1)`).
+* **Sequential Staggering**: Cards animate sequentially into view with a `45ms` stagger multiplier on page load.
+
+---
+
 ## 🖥️ C++ Core Engine (CLI Backend)
 
 The C++ source in `main.cpp` represents a object-oriented implementation matching the frontend logic exactly.
@@ -117,10 +138,14 @@ If the query string is absent, the system restores the state from `localStorage`
 
 ```markdown
 TriageCare/
-├── assets/                    # Project UI screenshots
+├── assets/                    # Project UI screenshots & assets
 │   ├── dashboard-light.png
 │   ├── dashboard-dark.png
-│   └── add-patient-light.png
+│   ├── add-patient-light.png
+│   ├── subtle_mesh_bg.png     # Premium application background mesh
+│   ├── avatar_placeholder.png # Silhouette avatar placeholder
+│   ├── heartbeat ECG.json     # Lottie ECG heartbeat decoration
+│   └── Success.json           # Lottie success feedback overlay
 ├── design-system.css          # Core CSS variables, classes, and layouts
 ├── design-system-spec.md      # Detailed documentation of HTML/CSS code tokens
 ├── app-state.js               # In-memory JS controller & state parser
