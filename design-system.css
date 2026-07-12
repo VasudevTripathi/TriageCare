@@ -300,11 +300,21 @@ a:hover {
 .tc-text-secondary { color: var(--tc-color-text-secondary) !important; }
 .tc-text-muted { color: var(--tc-color-text-muted) !important; }
 .tc-text-primary { color: var(--tc-color-primary) !important; }
+.tc-text-success { color: var(--tc-color-success) !important; }
+.tc-text-danger { color: var(--tc-color-danger) !important; }
+.tc-text-warning { color: var(--tc-color-warning) !important; }
 .tc-text-xs { font-size: var(--tc-font-xs); }
 .tc-text-sm { font-size: var(--tc-font-sm); }
 .tc-text-lg { font-size: var(--tc-font-lg); }
 .tc-text-semibold { font-weight: var(--tc-weight-semibold); }
 .tc-text-medium { font-weight: var(--tc-weight-medium); }
+
+/* Custom override for patient ID in tables: neutral main color instead of accent green */
+.tc-table td span.tc-text-primary {
+  color: var(--tc-color-text-main) !important;
+  font-weight: var(--tc-weight-semibold);
+  letter-spacing: 0.02em;
+}
 
 /* ==========================================================================
    5. Button Components
