@@ -830,7 +830,7 @@ select.tc-input {
   border-radius: var(--tc-radius-full);
   background-color: var(--tc-color-primary-soft);
   background-image: url('assets/avatar_placeholder.png');
-  background-size: cover;
+  background-size: 220%;
   background-position: center;
   background-repeat: no-repeat;
   display: flex;
@@ -1300,7 +1300,7 @@ select.tc-input {
   border-radius: var(--tc-radius-full);
   background-color: var(--tc-color-primary);
   background-image: url('assets/avatar_placeholder.png');
-  background-size: cover;
+  background-size: 220%;
   background-position: center;
   background-repeat: no-repeat;
   color: transparent !important;
@@ -1368,7 +1368,7 @@ select.tc-input {
   border-radius: var(--tc-radius-full);
   background-color: var(--tc-color-primary-soft);
   background-image: url('assets/avatar_placeholder.png');
-  background-size: cover;
+  background-size: 220%;
   background-position: center;
   background-repeat: no-repeat;
   border: 1px solid var(--tc-color-primary-border);
@@ -1477,7 +1477,7 @@ select.tc-input {
   border-radius: var(--tc-radius-full);
   background-color: var(--tc-color-danger-bg);
   background-image: url('assets/avatar_placeholder.png');
-  background-size: cover;
+  background-size: 220%;
   background-position: center;
   background-repeat: no-repeat;
   color: transparent !important;
