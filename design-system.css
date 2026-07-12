@@ -838,7 +838,7 @@ select.tc-input {
   justify-content: center;
   font-weight: var(--tc-weight-semibold);
   font-size: var(--tc-font-xs);
-  color: var(--tc-color-primary);
+  color: transparent !important;
   border: 1px solid var(--tc-color-primary-border);
 }
 
@@ -869,9 +869,9 @@ select.tc-input {
 }
 
 [data-theme="dark"] .tc-sidebar-container {
-  background-color: rgba(11, 11, 13, 0.55) !important;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background-color: var(--tc-color-sidebar) !important;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
   border-right: 1px solid rgba(255, 255, 255, 0.06);
 }
 
@@ -1303,7 +1303,7 @@ select.tc-input {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  color: #FFFFFF;
+  color: transparent !important;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1375,7 +1375,7 @@ select.tc-input {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--tc-color-primary);
+  color: transparent !important;
   font-size: var(--tc-font-lg);
   font-weight: var(--tc-weight-bold);
   box-shadow: var(--tc-shadow-sm);
@@ -1480,7 +1480,7 @@ select.tc-input {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  color: var(--tc-color-danger);
+  color: transparent !important;
   border: 2px solid var(--tc-color-danger-border);
   display: flex;
   align-items: center;
