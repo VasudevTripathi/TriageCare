@@ -99,10 +99,14 @@
     <main class="main-viewport">
       
       <!-- Top Header Row -->
-      <section class="header-section">
-        <div>
-          <h1 class="tc-text-main">Emergency Patient Triage System</h1>
-          <p class="tc-text-muted" style="margin-bottom: 0;">Manage emergency patients using priority-based triage.</p>
+      <section class="header-section" style="position: relative; overflow: hidden;">
+        <div style="display: flex; align-items: center; gap: var(--tc-space-4);">
+          <!-- Subtle decorative Lottie ECG animation -->
+          <div id="heartbeat-lottie" style="width: 110px; height: 45px; opacity: 0.28; pointer-events: none;"></div>
+          <div>
+            <h1 class="tc-text-main">Emergency Patient Triage System</h1>
+            <p class="tc-text-muted" style="margin-bottom: 0;">Manage emergency patients using priority-based triage.</p>
+          </div>
         </div>
         <div class="header-user-wrapper">
           <!-- Theme Switcher Trigger (Stripe Style) -->
